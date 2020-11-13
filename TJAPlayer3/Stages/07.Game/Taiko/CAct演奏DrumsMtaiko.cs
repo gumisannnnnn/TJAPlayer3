@@ -71,8 +71,8 @@ namespace TJAPlayer3
             //    this.txコースシンボル[ i ] = CDTXMania.tテクスチャの生成( CSkin.Path( this.strCourseSymbolFileName[ i ] ) );
             //}
             this.ctレベルアップダウン = new CCounter[ 4 ];
-            this.After = new int[ 4 ];
-            this.Before = new int[ 4 ];
+            this.After = new CDTX.ECourse[ 4 ];
+            this.Before = new CDTX.ECourse[ 4 ];
             for( int i = 0; i < 4; i++ )
             {
                 //this.ctレベルアップダウン = new CCounter( 0, 1000, 1, CDTXMania.Timer );
@@ -121,11 +121,11 @@ namespace TJAPlayer3
         {
             if( base.b初めての進行描画 )
 			{
-				this.nフラッシュ制御タイマ = FDK.CSound管理.rc演奏用タイマ.n現在時刻;
+				this.nフラッシュ制御タイマ = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
 				base.b初めての進行描画 = false;
             }
             
-            long num = FDK.CSound管理.rc演奏用タイマ.n現在時刻;
+            long num = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
 			if( num < this.nフラッシュ制御タイマ )
 			{
 				this.nフラッシュ制御タイマ = num;
@@ -141,9 +141,6 @@ namespace TJAPlayer3
 				}
 				this.nフラッシュ制御タイマ += 20;
 		    }
-
-
-            this.nHS = TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums < 8 ? TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums : 7;
 
             //if(CDTXMania.Tx.Taiko_Frame[ 0 ] != null )
                // CDTXMania.Tx.Taiko_Frame[ 0 ].t2D描画( CDTXMania.app.Device, 0, 184 );
@@ -262,102 +259,35 @@ namespace TJAPlayer3
                 }
             }
 
-            for( int i = 0; i < TJAPlayer3.ConfigIni.nPlayerCount; i++ )
+            for (int nPlayer = 0; nPlayer < TJAPlayer3.ConfigIni.nPlayerCount; nPlayer++)
             {
-                // 2018/7/1 一時的にオプション画像の廃止。オプション画像については後日作り直します。(AioiLight)
-                //if( !CDTXMania.ConfigIni.bNoInfo && CDTXMania.Skin.eDiffDispMode != E難易度表示タイプ.mtaikoに画像で表示 )
-                //{
-                //    this.txオプションパネル_HS.t2D描画( CDTXMania.app.Device, 0, 230, new Rectangle( 0, this.nHS * 44, 162, 44 ) );
-                //    switch( CDTXMania.ConfigIni.eRandom.Taiko )
-                //    {
-                //        case Eランダムモード.RANDOM:
-                //            if( this.txオプションパネル_RANMIR != null )
-                //                this.txオプションパネル_RANMIR.t2D描画( CDTXMania.app.Device, 0, 264, new Rectangle( 0, 0, 162, 44 ) );
-                //            break;
-                //        case Eランダムモード.HYPERRANDOM:
-                //            if( this.txオプションパネル_RANMIR != null )
-                //                this.txオプションパネル_RANMIR.t2D描画( CDTXMania.app.Device, 0, 264, new Rectangle( 0, 88, 162, 44 ) );
-                //            break;
-                //        case Eランダムモード.SUPERRANDOM:
-                //            if( this.txオプションパネル_RANMIR != null )
-                //                this.txオプションパネル_RANMIR.t2D描画( CDTXMania.app.Device, 0, 264, new Rectangle( 0, 132, 162, 44 ) );
-                //            break;
-                //        case Eランダムモード.MIRROR:
-                //            if( this.txオプションパネル_RANMIR != null )
-                //                this.txオプションパネル_RANMIR.t2D描画( CDTXMania.app.Device, 0, 264, new Rectangle( 0, 44, 162, 44 ) );
-                //            break;
-                //    }
-
-                //    if( CDTXMania.ConfigIni.eSTEALTH == Eステルスモード.STEALTH )
-                //        this.txオプションパネル_特殊.t2D描画( CDTXMania.app.Device, 0, 300, new Rectangle( 0, 0, 162, 44 ) );
-                //    else if( CDTXMania.ConfigIni.eSTEALTH == Eステルスモード.DORON )
-                //        this.txオプションパネル_特殊.t2D描画( CDTXMania.app.Device, 0, 300, new Rectangle( 0, 44, 162, 44 ) );
-                //}
-                if (TJAPlayer3.Tx.Couse_Symbol[TJAPlayer3.stage選曲.n確定された曲の難易度] != null)
+                TJAPlayer3.Tx.Couse_Symbol[TJAPlayer3.stage選曲.n確定された曲の難易度[nPlayer]]?.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_CourseSymbol_X[nPlayer], TJAPlayer3.Skin.Game_CourseSymbol_Y[nPlayer]);
+                if (TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer])
                 {
-                    TJAPlayer3.Tx.Couse_Symbol[TJAPlayer3.stage選曲.n確定された曲の難易度].t2D描画(TJAPlayer3.app.Device,
-                        TJAPlayer3.Skin.Game_CourseSymbol_X[i],
-                        TJAPlayer3.Skin.Game_CourseSymbol_Y[i]
-                        );
+                    TJAPlayer3.Tx.Couse_Symbol[(int)Difficulty.Total]?.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_CourseSymbol_X[nPlayer], TJAPlayer3.Skin.Game_CourseSymbol_Y[nPlayer]);
                 }
 
-                if (TJAPlayer3.ConfigIni.ShinuchiMode)
+                if (TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer])
                 {
                     if (TJAPlayer3.Tx.Couse_Symbol[(int)Difficulty.Total] != null)
                     {
                         TJAPlayer3.Tx.Couse_Symbol[(int)Difficulty.Total].t2D描画(TJAPlayer3.app.Device,
-                            TJAPlayer3.Skin.Game_CourseSymbol_X[i],
-                            TJAPlayer3.Skin.Game_CourseSymbol_Y[i]
+                            TJAPlayer3.Skin.Game_CourseSymbol_X[nPlayer],
+                            TJAPlayer3.Skin.Game_CourseSymbol_Y[nPlayer]
                             );
                     }
 
                 }
-
-
+                TJAPlayer3.Tx.Taiko_NamePlate[nPlayer]?.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_NamePlate_X[nPlayer], TJAPlayer3.Skin.Game_Taiko_NamePlate_Y[nPlayer]);
+                TJAPlayer3.Tx.Taiko_PlayerNumber[nPlayer]?.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_PlayerNumber_X[nPlayer], TJAPlayer3.Skin.Game_Taiko_PlayerNumber_Y[nPlayer]);
             }
-            if (TJAPlayer3.Tx.Taiko_NamePlate[0] != null)
-            {
-                TJAPlayer3.Tx.Taiko_NamePlate[0].t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_NamePlate_X[0], TJAPlayer3.Skin.Game_Taiko_NamePlate_Y[0]);
-            }
-            if(TJAPlayer3.stage演奏ドラム画面.bDoublePlay && TJAPlayer3.Tx.Taiko_NamePlate[1] != null)
-            {
-                TJAPlayer3.Tx.Taiko_NamePlate[1].t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_NamePlate_X[1], TJAPlayer3.Skin.Game_Taiko_NamePlate_Y[1]);
-            }
-
-            if (TJAPlayer3.Tx.Taiko_PlayerNumber[0] != null)
-            {
-                TJAPlayer3.Tx.Taiko_PlayerNumber[0].t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_PlayerNumber_X[0], TJAPlayer3.Skin.Game_Taiko_PlayerNumber_Y[0]);
-            }
-            if (TJAPlayer3.stage演奏ドラム画面.bDoublePlay && TJAPlayer3.Tx.Taiko_PlayerNumber[1] != null)
-            {
-                TJAPlayer3.Tx.Taiko_PlayerNumber[1].t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Taiko_PlayerNumber_X[1], TJAPlayer3.Skin.Game_Taiko_PlayerNumber_Y[1]);
-            }
-
-            //if (CDTXMania.Input管理.Keyboard.bキーが押された((int)SlimDX.DirectInput.Key.V))
-            //{
-            //    this.tMtaikoEvent( 0x11, 0, 1 );
-            //}
-            //if (CDTXMania.Input管理.Keyboard.bキーが押された((int)SlimDX.DirectInput.Key.N))
-            //{
-            //    this.tMtaikoEvent( 0x11, 1, 1 );
-            //}
-            //if (CDTXMania.Input管理.Keyboard.bキーが押された((int)SlimDX.DirectInput.Key.C))
-            //{
-            //    this.tMtaikoEvent( 0x12, 0, 1 );
-            //}
-            //if (CDTXMania.Input管理.Keyboard.bキーが押された((int)SlimDX.DirectInput.Key.M))
-            //{
-            //    this.tMtaikoEvent( 0x12, 1, 1 );
-            //}
-
-
 
             return base.On進行描画();
         }
 
         public void tMtaikoEvent( int nChannel, int nHand, int nPlayer )
         {
-            if( !TJAPlayer3.ConfigIni.b太鼓パートAutoPlay )
+            if (!TJAPlayer3.ConfigIni.bAutoPlay[0])
             {
                 switch( nChannel )
                 {
@@ -416,7 +346,7 @@ namespace TJAPlayer3
 
         }
 
-        public void tBranchEvent( int Before, int After, int player )
+        public void tBranchEvent(CDTX.ECourse Before, CDTX.ECourse After, int player )
         {
             if( After != Before )
                 this.ctレベルアップダウン[ player ] = new CCounter( 0, 1000, 1, TJAPlayer3.Timer );
@@ -455,7 +385,6 @@ namespace TJAPlayer3
         private CTexture txオプションパネル_HS;
         private CTexture txオプションパネル_RANMIR;
         private CTexture txオプションパネル_特殊;
-        private int nHS;
 
         //ネームプレート
         //private CTexture txネームプレート;
@@ -463,8 +392,8 @@ namespace TJAPlayer3
 
         //譜面分岐
         private CCounter[] ctレベルアップダウン;
-        private int[] After;
-        private int[] Before;
+		public CDTX.ECourse[] After;
+		public CDTX.ECourse[] Before;
         //private CTexture txレベルアップ;
         //private CTexture txレベルダウン;
         //-----------------

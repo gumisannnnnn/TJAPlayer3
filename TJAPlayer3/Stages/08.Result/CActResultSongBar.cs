@@ -48,7 +48,7 @@ namespace TJAPlayer3
 
 		    var title = TJAPlayer3.IsPerformingCalibration
 		        ? $"Calibration complete. InputAdjustTime is now {TJAPlayer3.ConfigIni.nInputAdjustTimeMs}ms"
-		        : TJAPlayer3.DTX.TITLE;
+		        : TJAPlayer3.DTX[0].TITLE;
 
 		    using (var bmpSongTitle = pfMusicName.DrawPrivateFont(title, TJAPlayer3.Skin.Result_MusicName_ForeColor, TJAPlayer3.Skin.Result_MusicName_BackColor))
 
@@ -117,7 +117,7 @@ namespace TJAPlayer3
                 this.txMusicName.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Result_MusicName_X - this.txMusicName.szテクスチャサイズ.Width * txMusicName.vc拡大縮小倍率.X, TJAPlayer3.Skin.Result_MusicName_Y);
             }
 
-            if(TJAPlayer3.stage選曲.n確定された曲の難易度 != (int)Difficulty.Dan)
+            if(TJAPlayer3.stage選曲.n確定された曲の難易度[0] != (int)Difficulty.Dan)
             {
                 if (TJAPlayer3.Skin.Result_StageText_ReferencePoint == CSkin.ReferencePoint.Center)
                 {

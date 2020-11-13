@@ -48,48 +48,33 @@ namespace TJAPlayer3
 			get; 
 			private set;
 		}
-		public static CDTX DTX
+		public static CDTX[] DTX
 		{
 			get
 			{
-				return dtx[ 0 ];
+				return dtx;
 			}
 			set
 			{
-				if( ( dtx[ 0 ] != null ) && ( app != null ) )
+				for (int nPlayer = 0; nPlayer < 2; nPlayer++)
 				{
-					dtx[ 0 ].On非活性化();
-					app.listトップレベルActivities.Remove( dtx[ 0 ] );
+					if ((dtx[nPlayer] != null) && (app != null))
+					{
+						dtx[nPlayer].On非活性化();
+						app.listトップレベルActivities.Remove(dtx[nPlayer]);
+					}
 				}
-				dtx[ 0 ] = value;
-				if( ( dtx[ 0 ] != null ) && ( app != null ) )
+				dtx = value;
+				for (int nPlayer = 0; nPlayer < 2; nPlayer++)
 				{
-					app.listトップレベルActivities.Add( dtx[ 0 ] );
-				}
-			}
-		}
-		public static CDTX DTX_2P
-		{
-			get
-			{
-				return dtx[ 1 ];
-			}
-			set
-			{
-				if( ( dtx[ 1 ] != null ) && ( app != null ) )
-				{
-					dtx[ 1 ].On非活性化();
-					app.listトップレベルActivities.Remove( dtx[ 1 ] );
-				}
-				dtx[ 1 ] = value;
-				if( ( dtx[ 1 ] != null ) && ( app != null ) )
-				{
-					app.listトップレベルActivities.Add( dtx[ 1 ] );
+					if ((dtx[nPlayer] != null) && (app != null))
+					{
+						app.listトップレベルActivities.Add(dtx[nPlayer]);
+					}
 				}
 			}
 		}
-
-	    public static bool IsPerformingCalibration;
+		public static bool IsPerformingCalibration;
 
 		public static CFPS FPS
 		{ 
@@ -102,64 +87,64 @@ namespace TJAPlayer3
 			private set;
 		}
 		#region [ 入力範囲ms ]
-		public static int nPerfect範囲ms
+		public static double dbPerfect範囲ms
 		{
 			get
 			{
 				if( stage選曲.r確定された曲 != null )
 				{
 					C曲リストノード c曲リストノード = stage選曲.r確定された曲.r親ノード;
-					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.nPerfect範囲ms >= 0 ) )
+					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.dbPerfect範囲ms >= 0 ) )
 					{
-						return c曲リストノード.nPerfect範囲ms;
+						return c曲リストノード.dbPerfect範囲ms;
 					}
 				}
-				return ConfigIni.nヒット範囲ms.Perfect;
+				return ConfigIni.dbヒット範囲ms.Perfect;
 			}
 		}
-		public static int nGreat範囲ms
+		public static double dbGreat範囲ms
 		{
 			get
 			{
 				if( stage選曲.r確定された曲 != null )
 				{
 					C曲リストノード c曲リストノード = stage選曲.r確定された曲.r親ノード;
-					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.nGreat範囲ms >= 0 ) )
+					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.dbGreat範囲ms >= 0 ) )
 					{
-						return c曲リストノード.nGreat範囲ms;
+						return c曲リストノード.dbGreat範囲ms;
 					}
 				}
-				return ConfigIni.nヒット範囲ms.Great;
+				return ConfigIni.dbヒット範囲ms.Great;
 			}
 		}
-		public static int nGood範囲ms
+		public static double dbGood範囲ms
 		{
 			get
 			{
 				if( stage選曲.r確定された曲 != null )
 				{
 					C曲リストノード c曲リストノード = stage選曲.r確定された曲.r親ノード;
-					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.nGood範囲ms >= 0 ) )
+					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.dbGood範囲ms >= 0 ) )
 					{
-						return c曲リストノード.nGood範囲ms;
+						return c曲リストノード.dbGood範囲ms;
 					}
 				}
-				return ConfigIni.nヒット範囲ms.Good;
+				return ConfigIni.dbヒット範囲ms.Good;
 			}
 		}
-		public static int nPoor範囲ms
+		public static double dbPoor範囲ms
 		{
 			get
 			{
 				if( stage選曲.r確定された曲 != null )
 				{
 					C曲リストノード c曲リストノード = stage選曲.r確定された曲.r親ノード;
-					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.nPoor範囲ms >= 0 ) )
+					if( ( ( c曲リストノード != null ) && ( c曲リストノード.eノード種別 == C曲リストノード.Eノード種別.BOX ) ) && ( c曲リストノード.dbPoor範囲ms >= 0 ) )
 					{
-						return c曲リストノード.nPoor範囲ms;
+						return c曲リストノード.dbPoor範囲ms;
 					}
 				}
-				return ConfigIni.nヒット範囲ms.Poor;
+				return ConfigIni.dbヒット範囲ms.Poor;
 			}
 		}
 		#endregion
@@ -1090,8 +1075,8 @@ namespace TJAPlayer3
 							if ( this.n進行描画の戻り値 == (int) E曲読込画面の戻り値.読込中止 )
 							{
 								//DTX.t全チップの再生停止();
-								if( DTX != null )
-                                    DTX.On非活性化();
+								if (DTX[0] != null)
+									DTX[0].On非活性化();
 								Trace.TraceInformation( "曲の読み込みを中止しました。" );
 								this.tガベージコレクションを実行する();
 								Trace.TraceInformation( "----------------------" );
@@ -1225,8 +1210,8 @@ for (int i = 0; i < 3; i++) {
 						{
 							case (int) E演奏画面の戻り値.再読込_再演奏:
 								#region [ DTXファイルを再読み込みして、再演奏 ]
-								DTX.t全チップの再生停止();
-								DTX.On非活性化();
+								DTX[0].t全チップの再生停止();
+								DTX[0].On非活性化();
 								r現在のステージ.On非活性化();
 								stage曲読み込み.On活性化();
 								r直前のステージ = r現在のステージ;
@@ -1286,8 +1271,8 @@ for (int i = 0; i < 3; i++) {
 								//---------------------
 								#endregion
 
-								DTX.t全チップの再生停止();
-								DTX.On非活性化();
+								DTX[0].t全チップの再生停止();
+								DTX[0].On非活性化();
 								r現在のステージ.On非活性化();
 								if( bコンパクトモード )
 								{
@@ -1335,8 +1320,8 @@ for (int i = 0; i < 3; i++) {
 								//---------------------
 								#endregion
 
-								DTX.t全チップの再生停止();
-								DTX.On非活性化();
+								DTX[0].t全チップの再生停止();
+								DTX[0].On非活性化();
 								r現在のステージ.On非活性化();
 								if( bコンパクトモード )
 								{
@@ -1374,7 +1359,8 @@ for (int i = 0; i < 3; i++) {
 								stage演奏ドラム画面.t演奏結果を格納する( out c演奏記録_Drums );
 
                                 double ps = 0.0, gs = 0.0;
-								if ( !c演奏記録_Drums.b全AUTOである && c演奏記録_Drums.n全チップ数 > 0) {
+								if (!TJAPlayer3.ConfigIni.bAutoPlay[0] && c演奏記録_Drums.n全チップ数 > 0)
+								{
 									ps = c演奏記録_Drums.db演奏型スキル値;
 									gs = c演奏記録_Drums.dbゲーム型スキル値;
 								}
@@ -1460,8 +1446,8 @@ for (int i = 0; i < 3; i++) {
 						if( this.n進行描画の戻り値 != 0 )
 						{
 							//DTX.t全チップの再生一時停止();
-                            DTX.t全チップの再生停止とミキサーからの削除();
-                            DTX.On非活性化();
+							DTX[0].t全チップの再生停止とミキサーからの削除();
+							DTX[0].On非活性化();
 							r現在のステージ.On非活性化();
                             this.tガベージコレクションを実行する();
                             if ( !bコンパクトモード )
@@ -1974,7 +1960,9 @@ for (int i = 0; i < 3; i++) {
 			//---------------------
 			#endregion
 
-			DTX = null;
+			DTX[0] = null;
+			Trace.WriteLine("null化します");
+			DTX[1] = null;
 
 			#region [ Skin の初期化 ]
 			//---------------------
@@ -1986,7 +1974,7 @@ for (int i = 0; i < 3; i++) {
 				TJAPlayer3.ConfigIni.strSystemSkinSubfolderFullName = TJAPlayer3.Skin.GetCurrentSkinSubfolderFullName( true );	// 旧指定のSkinフォルダが消滅していた場合に備える
 				Trace.TraceInformation( "スキンの初期化を完了しました。" );
 			}
-			catch (Exception e)
+			catch
 			{
 				Trace.TraceInformation( "スキンの初期化に失敗しました。" );
 				throw;
@@ -2090,7 +2078,7 @@ for (int i = 0; i < 3; i++) {
 				}
 				Trace.TraceInformation( "DirectInput の初期化を完了しました。" );
 			}
-			catch( Exception exception2 )
+			catch
 			{
 				Trace.TraceError( "DirectInput, MIDI入力の初期化に失敗しました。" );
 				throw;
@@ -2692,22 +2680,22 @@ for (int i = 0; i < 3; i++) {
 		private CScoreIni tScoreIniへBGMAdjustとHistoryとPlayCountを更新(string str新ヒストリ行)
 		{
 			bool bIsUpdatedDrums, bIsUpdatedGuitar, bIsUpdatedBass;
-			string strFilename = DTX.strファイル名の絶対パス + ".score.ini";
+			string strFilename = DTX[0].strファイル名の絶対パス + ".score.ini";
 			CScoreIni ini = new CScoreIni( strFilename );
 			if( !File.Exists( strFilename ) )
 			{
-				ini.stファイル.Title = DTX.TITLE;
-				ini.stファイル.Name = DTX.strファイル名;
-				ini.stファイル.Hash = CScoreIni.tファイルのMD5を求めて返す( DTX.strファイル名の絶対パス );
-				for( int i = 0; i < 6; i++ )
+				ini.stファイル.Title = DTX[0].TITLE;
+				ini.stファイル.Name = DTX[0].strファイル名;
+				ini.stファイル.Hash = CScoreIni.tファイルのMD5を求めて返す(DTX[0].strファイル名の絶対パス);
+				for ( int i = 0; i < 6; i++ )
 				{
-					ini.stセクション[ i ].nPerfectになる範囲ms = nPerfect範囲ms;
-					ini.stセクション[ i ].nGreatになる範囲ms = nGreat範囲ms;
-					ini.stセクション[ i ].nGoodになる範囲ms = nGood範囲ms;
-					ini.stセクション[ i ].nPoorになる範囲ms = nPoor範囲ms;
+					ini.stセクション[ i ].dbPerfectになる範囲ms = dbPerfect範囲ms;
+					ini.stセクション[ i ].dbGreatになる範囲ms = dbGreat範囲ms;
+					ini.stセクション[ i ].dbGoodになる範囲ms = dbGood範囲ms;
+					ini.stセクション[ i ].dbPoorになる範囲ms = dbPoor範囲ms;
 				}
 			}
-			ini.stファイル.BGMAdjust = DTX.nBGMAdjust;
+			ini.stファイル.BGMAdjust = DTX[0].nBGMAdjust;
 			CScoreIni.t更新条件を取得する( out bIsUpdatedDrums, out bIsUpdatedGuitar, out bIsUpdatedBass );
 			if( bIsUpdatedDrums || bIsUpdatedGuitar || bIsUpdatedBass )
 			{

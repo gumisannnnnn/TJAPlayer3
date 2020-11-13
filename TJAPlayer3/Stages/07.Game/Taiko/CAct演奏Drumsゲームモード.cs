@@ -96,7 +96,7 @@ namespace TJAPlayer3
         public void t叩ききりまショー_初期化()
         {
             this.st叩ききりまショー = new ST叩ききりまショー();
-            this.n演奏時間 = ( TJAPlayer3.DTX.listChip.Count > 0 ) ? TJAPlayer3.DTX.listChip[ TJAPlayer3.DTX.listChip.Count - 1 ].n発声時刻ms : 0;
+            this.n演奏時間 = (TJAPlayer3.DTX[0].listChip.Count > 0) ? TJAPlayer3.DTX[0].listChip[TJAPlayer3.DTX[0].listChip.Count - 1].n発声時刻ms : 0;
             this.st叩ききりまショー.ct残り時間 = new CCounter( 0, 25000, 1, TJAPlayer3.Timer );
             this.st叩ききりまショー.ct加算時間表示 = new CCounter();
             this.st叩ききりまショー.ct加算審査中 = new CCounter();
@@ -261,7 +261,7 @@ namespace TJAPlayer3
                 };
 
                 //★10の場合超激辛モードになる。
-                if( TJAPlayer3.DTX.LEVELtaiko[ TJAPlayer3.stage選曲.n確定された曲の難易度 ] >= 10 )
+                if (TJAPlayer3.DTX[0].LEVELtaiko[TJAPlayer3.stage選曲.n確定された曲の難易度[0]] >= 10)
                 {
                     #region[ 超激辛 ]
                     this.st叩ききりまショー.b超激辛 = true;
@@ -409,7 +409,7 @@ namespace TJAPlayer3
 				    if( !this.st叩ききりまショー.ct残り時間.b停止中 || this.st叩ききりまショー.b加算アニメ中 == true )
 				    {
                         this.st叩ききりまショー.ct残り時間.t進行();
-					    if( !TJAPlayer3.stage演奏ドラム画面.r検索範囲内にチップがあるか調べる( CSound管理.rc演奏用タイマ.n現在時刻ms, 0, 5000, 0 ) || this.st叩ききりまショー.b加算アニメ中 == true )
+					    if( !TJAPlayer3.stage演奏ドラム画面.r検索範囲内にチップがあるか調べる((long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0)), 0, 5000, 0 ) || this.st叩ききりまショー.b加算アニメ中 == true )
 					    {
                             this.st叩ききりまショー.bタイマー使用中 = false;
 						    this.st叩ききりまショー.ct残り時間.t停止();
@@ -529,7 +529,7 @@ namespace TJAPlayer3
             double n延長する時間 = 0;
 
             //最後に延長した時刻から11秒経過していなければ延長を行わない。
-            if( this.n最後に時間延長した時刻 + 11000 <= CSound管理.rc演奏用タイマ.n現在時刻ms )
+            if( this.n最後に時間延長した時刻 + 11000 <= (CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0)))
             {
                 //1項目につき5秒
                 //-精度
@@ -595,10 +595,10 @@ namespace TJAPlayer3
                     }
                 }
                 #region[ 全体 ]
-                if( TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Perfect != 0 || TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Great != 0 )
+                if (TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Perfect != 0 || TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Great != 0)
                 {
-                    double db全体精度 = ( (double) ( TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Perfect + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Great ) / this.st叩ききりまショー.n区間ノート数 ) * 100.0;
-                    for( int i = 0; i < this.n全体精度ボーナス.Length; i++ )
+                    double db全体精度 = ((double)(TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Perfect + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Great) / this.st叩ききりまショー.n区間ノート数) * 100.0;
+                    for ( int i = 0; i < this.n全体精度ボーナス.Length; i++ )
                     {
                         if( db全体精度 >= this.n全体精度ボーナス[ i ].ret )
                         {
@@ -622,10 +622,10 @@ namespace TJAPlayer3
                     }
                 }
                 #endregion
-                if( TJAPlayer3.stage演奏ドラム画面.actCombo.n現在のコンボ数.P1最高値 != 0 )
+                if (TJAPlayer3.stage演奏ドラム画面.actCombo.n現在のコンボ数.最高値[0] != 0)
                 {
-                    double db全体コンボ率 = ( (double)TJAPlayer3.stage演奏ドラム画面.actCombo.n現在のコンボ数.P1最高値 / this.st叩ききりまショー.n現在通過したノート数 ) * 100.0;
-                    for( int i = 0; i < this.n全体コンボ率ボーナス.Length; i++ )
+                    double db全体コンボ率 = ((double)TJAPlayer3.stage演奏ドラム画面.actCombo.n現在のコンボ数.最高値[0] / this.st叩ききりまショー.n現在通過したノート数) * 100.0;
+                    for ( int i = 0; i < this.n全体コンボ率ボーナス.Length; i++ )
                     {
                         if( db全体コンボ率 >= this.n全体コンボ率ボーナス[ i ].ret )
                         {
@@ -635,8 +635,8 @@ namespace TJAPlayer3
                     }
                 }
 
-                double db全体ミス率 = ( ( (double)TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Poor + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Miss ) / this.st叩ききりまショー.n現在通過したノート数 ) * 100.0;
-                for( int i = 0; i < this.n全体ミス率ボーナス.Length; i++ )
+                double db全体ミス率 = (((double)TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Poor + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Drums.Miss) / this.st叩ききりまショー.n現在通過したノート数) * 100.0;
+                for ( int i = 0; i < this.n全体ミス率ボーナス.Length; i++ )
                 {
                     if( db全体ミス率 >= this.n全体ミス率ボーナス[ i ].ret )
                     {
@@ -647,7 +647,7 @@ namespace TJAPlayer3
                 #endregion
 
 
-                this.n最後に時間延長した時刻 = (int)CSound管理.rc演奏用タイマ.n現在時刻ms;
+                this.n最後に時間延長した時刻 = (int)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
                 if( n延長する時間 < 0 )
                     n延長する時間 = 0;
                 if( this.st叩ききりまショー.n区間ノート数 == 0 )
@@ -718,7 +718,7 @@ namespace TJAPlayer3
                 }
 
 
-                this.n最後に時間延長した時刻 = (int)CSound管理.rc演奏用タイマ.n現在時刻ms;
+                this.n最後に時間延長した時刻 = (int)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
                 if( n延長する時間 < 0 )
                     n延長する時間 = 0;
 

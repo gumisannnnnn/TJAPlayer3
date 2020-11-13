@@ -100,7 +100,6 @@ namespace TJAPlayer3
                                 {
                                     this.ct点数アニメタイマ[stScore[i].nPlayer] = new CCounter(0, 11, 12, TJAPlayer3.Timer);
                                 }
-                                TJAPlayer3.stage演奏ドラム画面.actDan.Update();
                             }
 
                             int xAdd = 0;

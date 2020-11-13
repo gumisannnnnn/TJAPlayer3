@@ -426,8 +426,11 @@ namespace TJAPlayer3
 
 		
 					c曲リストノード.list子リスト = new List<C曲リストノード>();
-					c曲リストノード.arスコア[ 0 ] = new Cスコア();
-					c曲リストノード.arスコア[ 0 ].ファイル情報.フォルダの絶対パス = infoDir.FullName + @"\";
+					for (int i = 0; i < (int)Difficulty.Total; i++)
+					{
+						c曲リストノード.arスコア[i] = new Cスコア();
+					}
+					c曲リストノード.arスコア[0].ファイル情報.フォルダの絶対パス = infoDir.FullName + @"\";
 					c曲リストノード.arスコア[ 0 ].譜面情報.タイトル = c曲リストノード.strタイトル;
 					c曲リストノード.arスコア[ 0 ].譜面情報.コメント =
 						(CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "ja") ?
@@ -551,10 +554,13 @@ namespace TJAPlayer3
 
 
                     c曲リストノード.nスコア数 = 1;
-					c曲リストノード.arスコア[ 0 ] = new Cスコア();
-					c曲リストノード.arスコア[ 0 ].ファイル情報.フォルダの絶対パス = infoDir.FullName + @"\";
-					c曲リストノード.arスコア[ 0 ].譜面情報.タイトル = boxdef.Title;
-					c曲リストノード.arスコア[ 0 ].譜面情報.ジャンル = boxdef.Genre;
+					for (int i = 0; i < (int)Difficulty.Total; i++)
+					{
+						c曲リストノード.arスコア[i] = new Cスコア();
+						c曲リストノード.arスコア[i].ファイル情報.フォルダの絶対パス = infoDir.FullName + @"\";
+						c曲リストノード.arスコア[i].譜面情報.タイトル = boxdef.Title;
+						c曲リストノード.arスコア[i].譜面情報.ジャンル = boxdef.Genre;
+					}
 					c曲リストノード.r親ノード = node親;
 
 					c曲リストノード.strBreadcrumbs = ( c曲リストノード.r親ノード == null ) ?
@@ -818,7 +824,6 @@ namespace TJAPlayer3
 									c曲リストノード.arスコア[ i ].譜面情報.レベル.Guitar = cdtx.LEVEL.Guitar;
 									c曲リストノード.arスコア[ i ].譜面情報.レベル.Bass = cdtx.LEVEL.Bass;
 									c曲リストノード.arスコア[ i ].譜面情報.レベルを非表示にする = cdtx.HIDDENLEVEL;
-									c曲リストノード.arスコア[ i ].譜面情報.曲種別 = cdtx.e種別;
 									c曲リストノード.arスコア[ i ].譜面情報.Bpm = cdtx.BPM;
 									c曲リストノード.arスコア[ i ].譜面情報.Duration = 0;	//  (cdtx.listChip == null)? 0 : cdtx.listChip[ cdtx.listChip.Count - 1 ].n発声時刻ms;
                                     c曲リストノード.arスコア[ i ].譜面情報.strBGMファイル名 = cdtx.strBGM_PATH;
@@ -1020,7 +1025,10 @@ namespace TJAPlayer3
 					itemBack.strBreadcrumbs = ( itemBack.r親ノード == null ) ?
 						itemBack.strタイトル : itemBack.r親ノード.strBreadcrumbs + " > " + itemBack.strタイトル;
 
-					itemBack.arスコア[ 0 ] = new Cスコア();
+					for (int i = 0; i < (int)Difficulty.Total; i++)
+					{
+						itemBack.arスコア[i] = new Cスコア();
+					}
 					itemBack.arスコア[ 0 ].ファイル情報.フォルダの絶対パス = "";
 					itemBack.arスコア[ 0 ].譜面情報.タイトル = itemBack.strタイトル;
 					itemBack.arスコア[ 0 ].譜面情報.コメント =
@@ -1610,13 +1618,13 @@ Debug.WriteLine( dBPM + ":" + c曲リストノード.strタイトル );
 						// (A) 全オートじゃないようなので、演奏結果情報を有効としてランクを算出する。
 
 						score.譜面情報.最大ランク[ n楽器番号 ] =
-							CScoreIni.tランク値を計算して返す( 
-								ini.stセクション[ n ].n全チップ数,
-								ini.stセクション[ n ].nPerfect数, 
-								ini.stセクション[ n ].nGreat数,
-								ini.stセクション[ n ].nGood数, 
-								ini.stセクション[ n ].nPoor数,
-								ini.stセクション[ n ].nMiss数 );
+							CScoreIni.tランク値を計算して返す(
+								ini.stセクション[n].n全チップ数,
+								ini.stセクション[n].nPerfect数[0],
+								ini.stセクション[n].nGreat数[0],
+								ini.stセクション[n].nGood数[0],
+								ini.stセクション[n].nPoor数[0],
+								ini.stセクション[n].nMiss数[0]);
 					}
 					else
 					{
@@ -1628,8 +1636,8 @@ Debug.WriteLine( dBPM + ":" + c曲リストノード.strタイトル );
 					#endregion
 					score.譜面情報.最大スキル[ n楽器番号 ] = ini.stセクション[ n ].db演奏型スキル値;
 					score.譜面情報.フルコンボ[ n楽器番号 ] = ini.stセクション[ n ].bフルコンボである;
-                    score.譜面情報.ハイスコア = (int)ini.stセクション.HiScoreDrums.nスコア;
-                    for( int i = 0; i < (int)Difficulty.Total; i++ )
+					score.譜面情報.ハイスコア = (int)ini.stセクション.HiScoreDrums.nスコア[0];
+					for ( int i = 0; i < (int)Difficulty.Total; i++ )
                     {
                         score.譜面情報.nハイスコア[ i ] = (int)ini.stセクション.HiScoreDrums.nハイスコア[ i ];
                     }

@@ -33,16 +33,18 @@ namespace TJAPlayer3
 				return true;
 			}
 		}
-		public int n現在のアンカ難易度レベル 
+		public int n現在選択中の曲のコース数 = 0;
+		public bool[] b譜面が存在する = new bool[7];
+		public int[] n現在のアンカ難易度レベル
 		{
 			get;
 			private set;
 		}
-		public int n現在選択中の曲の現在の難易度レベル
+		public int[] n現在選択中の曲の現在の難易度レベル
 		{
 			get
 			{
-				return this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( this.r現在選択中の曲 );
+				return new int[] { this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(this.r現在選択中の曲, 0), this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(this.r現在選択中の曲, 1) };
 			}
 		}
 		public Cスコア r現在選択中のスコア
@@ -51,7 +53,7 @@ namespace TJAPlayer3
 			{
 				if( this.r現在選択中の曲 != null )
 				{
-					return this.r現在選択中の曲.arスコア[ this.n現在選択中の曲の現在の難易度レベル ];
+					return this.r現在選択中の曲.arスコア[this.n現在選択中の曲の現在の難易度レベル[0]];
 				}
 				return null;
 			}
@@ -126,56 +128,81 @@ namespace TJAPlayer3
 
 
             this.r現在選択中の曲 = null;
-            this.n現在のアンカ難易度レベル = TJAPlayer3.ConfigIni.nDefaultCourse;
+			n現在のアンカ難易度レベル = new int[2];
+			for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+				this.n現在のアンカ難易度レベル[nPlayer] = TJAPlayer3.ConfigIni.nDefaultCourse;
 			base.b活性化してない = true;
 			this.bIsEnumeratingSongs = false;
 		}
 
 
 		// メソッド
-
-		public int n現在のアンカ難易度レベルに最も近い難易度レベルを返す( C曲リストノード song )
+		public int n現在選択中の曲のコース数を返す(C曲リストノード song)
+		{
+			int nコース数 = 0;
+			for (int n = 0; n < 7; n++)
+			{
+				if (song.arスコア[n] != null)
+				{
+					nコース数++;
+					b譜面が存在する[n] = true;
+				}
+				else
+					b譜面が存在する[n] = false;
+			}
+			return nコース数;
+		}
+		public int n現在のアンカ難易度レベルに最も近い難易度レベルを返す(C曲リストノード song, int nPlayer)
 		{
 			// 事前チェック。
+			n現在選択中の曲のコース数 = n現在選択中の曲のコース数を返す(song);
 
-			if( song == null )
-				return this.n現在のアンカ難易度レベル;	// 曲がまったくないよ
+			if (song == null)
+				return this.n現在のアンカ難易度レベル[nPlayer]; // 曲がまったくないよ
 
-			if( song.arスコア[ this.n現在のアンカ難易度レベル ] != null )
-				return this.n現在のアンカ難易度レベル;	// 難易度ぴったりの曲があったよ
+			if (song.arスコア[this.n現在のアンカ難易度レベル[nPlayer]] != null)
+				return this.n現在のアンカ難易度レベル[nPlayer]; // 難易度ぴったりの曲があったよ
 
-			if( ( song.eノード種別 == C曲リストノード.Eノード種別.BOX ) || ( song.eノード種別 == C曲リストノード.Eノード種別.BACKBOX ) )
-				return 0;								// BOX と BACKBOX は関係無いよ
+			if ( ( song.eノード種別 == C曲リストノード.Eノード種別.BOX ) || ( song.eノード種別 == C曲リストノード.Eノード種別.BACKBOX ) )
+				return 0;                               // BOX と BACKBOX は関係無いよ
 
 
 			// 現在のアンカレベルから、難易度上向きに検索開始。
 
-			int n最も近いレベル = this.n現在のアンカ難易度レベル;
+			int n最も近いレベル = this.n現在のアンカ難易度レベル[nPlayer];
 
-			for( int i = 0; i < (int)Difficulty.Total; i++ )
+			for ( int i = 0; i < (int)Difficulty.Total; i++ )
 			{
 				if( song.arスコア[ n最も近いレベル ] != null )
-					break;	// 曲があった。
+					break;  // 曲があった。
 
-				n最も近いレベル = ( n最も近いレベル + 1 ) % (int)Difficulty.Total;	// 曲がなかったので次の難易度レベルへGo。（5以上になったら0に戻る。）
+				n最も近いレベル = (n最も近いレベル + 1) % (int)Difficulty.Total;    // 曲がなかったので次の難易度レベルへGo。（5以上になったら0に戻る。）
+				if (nPlayer != 0 && n最も近いレベル > 4)
+				{
+					n最も近いレベル = 0;
+				}
 			}
 
 
 			// 見つかった曲がアンカより下のレベルだった場合……
 			// アンカから下向きに検索すれば、もっとアンカに近い曲があるんじゃね？
 
-			if( n最も近いレベル < this.n現在のアンカ難易度レベル )
+			if (n最も近いレベル < this.n現在のアンカ難易度レベル[nPlayer])
 			{
 				// 現在のアンカレベルから、難易度下向きに検索開始。
 
-				n最も近いレベル = this.n現在のアンカ難易度レベル;
+				n最も近いレベル = this.n現在のアンカ難易度レベル[nPlayer];
 
-				for( int i = 0; i < (int)Difficulty.Total; i++ )
+				for ( int i = 0; i < (int)Difficulty.Total; i++ )
 				{
 					if( song.arスコア[ n最も近いレベル ] != null )
-						break;	// 曲があった。
+						break;  // 曲があった。
 
-					n最も近いレベル = ( ( n最も近いレベル - 1 ) + (int)Difficulty.Total) % (int)Difficulty.Total;	// 曲がなかったので次の難易度レベルへGo。（0未満になったら4に戻る。）
+					n最も近いレベル = ((n最も近いレベル - 1) + (int)Difficulty.Total) % (int)Difficulty.Total; // 曲がなかったので次の難易度レベルへGo。（0未満になったら4に戻る。）
+					if (nPlayer != 0 && n最も近いレベル > 4)
+					{
+						n最も近いレベル = 4;
+					}
 				}
 			}
 
@@ -266,6 +293,7 @@ namespace TJAPlayer3
 				this.t現在選択中の曲を元に曲バーを再構成する();
 				this.t選択曲が変更された(false);									// #27648 項目数変更を反映させる
 				this.b選択曲が変更された = true;
+				TJAPlayer3.stage選曲.t選択曲変更通知();
 			}
 			return ret;
 		}
@@ -300,6 +328,7 @@ namespace TJAPlayer3
 				this.t現在選択中の曲を元に曲バーを再構成する();
 				this.t選択曲が変更された(false);									// #27648 項目数変更を反映させる
 				this.b選択曲が変更された = true;
+				TJAPlayer3.stage選曲.t選択曲変更通知();
 			}
 			return ret;
 		}
@@ -327,20 +356,20 @@ namespace TJAPlayer3
 			}
 			this.b選択曲が変更された = true;
 		}
-		public void t難易度レベルをひとつ進める()
+		public void t難易度レベルをひとつ進める(int nPlayer)
 		{
 			if( ( this.r現在選択中の曲 == null ) || ( this.r現在選択中の曲.nスコア数 <= 1 ) )
-				return;		// 曲にスコアが０～１個しかないなら進める意味なし。
-			
+				return;     // 曲にスコアが０～１個しかないなら進める意味なし。
+
 
 			// 難易度レベルを＋１し、現在選曲中のスコアを変更する。
 
-			this.n現在のアンカ難易度レベル = this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( this.r現在選択中の曲 );
+			this.n現在のアンカ難易度レベル[nPlayer] = this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(this.r現在選択中の曲, nPlayer);
 
-			for( int i = 0; i < (int)Difficulty.Total; i++ )
+			for ( int i = 0; i < (int)Difficulty.Total; i++ )
 			{
-				this.n現在のアンカ難易度レベル = ( this.n現在のアンカ難易度レベル + 1 ) % (int)Difficulty.Total;	// ５以上になったら０に戻る。
-				if( this.r現在選択中の曲.arスコア[ this.n現在のアンカ難易度レベル ] != null )	// 曲が存在してるならここで終了。存在してないなら次のレベルへGo。
+				this.n現在のアンカ難易度レベル[nPlayer] = (this.n現在のアンカ難易度レベル[nPlayer] + 1) % (int)Difficulty.Total;    // ５以上になったら０に戻る。
+				if (this.r現在選択中の曲.arスコア[this.n現在のアンカ難易度レベル[nPlayer]] != null)   // 曲が存在してるならここで終了。存在してないなら次のレベルへGo。
 					break;
 			}
 
@@ -356,7 +385,7 @@ namespace TJAPlayer3
 				int index = ( i + 13 ) % 13;
 				for( int m = 0; m < 3; m++ )
 				{
-					this.stバー情報[ index ].nスキル値[ m ] = (int) song.arスコア[ this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( song ) ].譜面情報.最大スキル[ m ];
+					this.stバー情報[index].nスキル値[m] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song, 0)].譜面情報.最大スキル[m];
 				}
 				song = this.r次の曲( song );
 			}
@@ -369,30 +398,30 @@ namespace TJAPlayer3
         /// <summary>
         /// 不便だったから作った。
         /// </summary>
-		public void t難易度レベルをひとつ戻す()
+		public void t難易度レベルをひとつ戻す(int nPlayer)
 		{
 			if( ( this.r現在選択中の曲 == null ) || ( this.r現在選択中の曲.nスコア数 <= 1 ) )
-				return;		// 曲にスコアが０～１個しかないなら進める意味なし。
-			
+				return;     // 曲にスコアが０～１個しかないなら進める意味なし。
+
 
 			// 難易度レベルを＋１し、現在選曲中のスコアを変更する。
 
-			this.n現在のアンカ難易度レベル = this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( this.r現在選択中の曲 );
+			this.n現在のアンカ難易度レベル[nPlayer] = this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(this.r現在選択中の曲, nPlayer);
 
-            this.n現在のアンカ難易度レベル--;
-            if( this.n現在のアンカ難易度レベル < 0 ) // 0より下になったら4に戻す。
-            {
-                this.n現在のアンカ難易度レベル = 4;
-            }
+			this.n現在のアンカ難易度レベル[nPlayer]--;
+			if (this.n現在のアンカ難易度レベル[nPlayer] < 0) // 0より下になったら4に戻す。
+			{
+				this.n現在のアンカ難易度レベル[nPlayer] = 4;
+			}
 
             //2016.08.13 kairera0467 かんたん譜面が無い譜面(ふつう、むずかしいのみ)で、難易度を最上位に戻せない不具合の修正。
             bool bLabel0NotFound = true;
-            for( int i = this.n現在のアンカ難易度レベル; i >= 0; i-- )
-            {
+			for (int i = this.n現在のアンカ難易度レベル[nPlayer]; i >= 0; i--)
+			{
                 if( this.r現在選択中の曲.arスコア[ i ] != null )
                 {
-                    this.n現在のアンカ難易度レベル = i;
-                    bLabel0NotFound = false;
+					this.n現在のアンカ難易度レベル[nPlayer] = i;
+					bLabel0NotFound = false;
                     break;
                 }
             }
@@ -402,8 +431,8 @@ namespace TJAPlayer3
                 {
                     if( this.r現在選択中の曲.arスコア[ i ] != null )
                     {
-                        this.n現在のアンカ難易度レベル = i;
-                        break;
+						this.n現在のアンカ難易度レベル[nPlayer] = i;
+						break;
                     }
                 }
             }
@@ -419,7 +448,7 @@ namespace TJAPlayer3
 				int index = ( i + 13 ) % 13;
 				for( int m = 0; m < 3; m++ )
 				{
-					this.stバー情報[ index ].nスキル値[ m ] = (int) song.arスコア[ this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( song ) ].譜面情報.最大スキル[ m ];
+					this.stバー情報[index].nスキル値[m] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song, 0)].譜面情報.最大スキル[m];
 				}
 				song = this.r次の曲( song );
 			}
@@ -766,10 +795,10 @@ namespace TJAPlayer3
 				for( int i = 0; i < 13; i++ )
 					this.ct登場アニメ用[ i ] = new CCounter( -i * 10, 100, 3, TJAPlayer3.Timer );
 
-				this.nスクロールタイマ = CSound管理.rc演奏用タイマ.n現在時刻;
+				this.nスクロールタイマ = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
 				TJAPlayer3.stage選曲.t選択曲変更通知();
 
-                this.n矢印スクロール用タイマ値 = CSound管理.rc演奏用タイマ.n現在時刻;
+                this.n矢印スクロール用タイマ値 = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
 				this.ct三角矢印アニメ.t開始( 0, 1000, 1, TJAPlayer3.Timer );
                     base.b初めての進行描画 = false;
 			}
@@ -925,12 +954,11 @@ namespace TJAPlayer3
 
 						}
 
-						
+
 						// 新しく最下部に表示されるパネル用のスキル値を取得。
-
-						for( int i = 0; i < 3; i++ )
-							this.stバー情報[ index ].nスキル値[ i ] = (int) song.arスコア[ this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( song ) ].譜面情報.最大スキル[ i ];
-
+						for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+							for (int i = 0; i < 3; i++)
+								this.stバー情報[index].nスキル値[i] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song, 0)].譜面情報.最大スキル[i];
 
 						// 1行(100カウント)移動完了。
 
@@ -991,11 +1019,11 @@ namespace TJAPlayer3
                             this.stバー情報[ i ].ttkタイトル = this.ttk曲名テクスチャを生成する( this.stバー情報[ i ].strタイトル文字列, this.stバー情報[i].ForeColor, this.stバー情報[i].BackColor);
 						}
 
-		
+
 						// 新しく最上部に表示されるパネル用のスキル値を取得。
-						
-						for( int i = 0; i < 3; i++ )
-							this.stバー情報[ index ].nスキル値[ i ] = (int) song.arスコア[ this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( song ) ].譜面情報.最大スキル[ i ];
+						for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+							for (int i = 0; i < 3; i++)
+								this.stバー情報[index].nスキル値[i] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song, 0)].譜面情報.最大スキル[i];
 
 
 						// 1行(100カウント)移動完了。
@@ -1070,96 +1098,120 @@ namespace TJAPlayer3
                     switch (r現在選択中の曲.eノード種別)
                     {
                         case C曲リストノード.Eノード種別.SCORE:
-                            {
-                                if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
-                                {
-                                    // 難易度がTower、Danではない
-                                    if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Tower && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Dan)
-                                    {
-                                        for (int i = 0; i < (int)Difficulty.Edit + 1; i++)
-                                        {
-                                            if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i] >= 0)
-                                            {
-                                                // レベルが0以上
-                                                TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    // エディット
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                                else if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // レベルが0未満 = 譜面がないとみなす
-                                                TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    // エディット
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                                else if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[TJAPlayer3.stage選曲.n現在選択中の曲の難易度] >= 0)
-                                        {
-                                            // 譜面がありますね
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 + (360 * (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 - (int)Difficulty.Tower)), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
-                                        }
-                                        else
-                                        {
-                                            // ないですね
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 + (360 * (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 - (int)Difficulty.Tower)), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
-                                        }
-                                    }
-                                }
-                                #region[ 星 ]
-                                if (TJAPlayer3.Tx.SongSelect_Level != null)
-                                {
-                                    // 全難易度表示
-                                    // 難易度がTower、Danではない
-                                    if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Tower && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Dan)
-                                    {
-                                        for (int i = 0; i < (int)Difficulty.Edit + 1; i++)
-                                        {
-                                            for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
-                                            {
-                                                // 星11以上はループ終了
-                                                //if (n > 9) break;
-                                                // 裏なら鬼と同じ場所に
-                                                if (i == 3 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4) break;
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
-                                                }
-                                                if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[TJAPlayer3.stage選曲.n現在選択中の曲の難易度]; i++)
-                                        {
-                                            TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (i * 17), new Rectangle(32 * TJAPlayer3.stage選曲.n現在選択中の曲の難易度, 0, 32, 32));
-                                        }
-                                    }
-                                }
-                                #endregion
-                            }
+							for (int nPlayer = 1; nPlayer >= 0; nPlayer--)
+							{
+								if (bコース選択中[nPlayer])
+								{
+									#region [ コース選択中の表示 ]
+
+									for (int i = 6; i >= 0; i--)
+									{
+										#region [ コース看板 カラーリング ]
+										if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
+										{
+											if (b譜面が存在する[i]) TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
+											else
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
+										}
+										#endregion
+
+										if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] >= 5 && i >= 5)
+										{
+											TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 * (i - 4), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
+											for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+												TJAPlayer3.Tx.SongSelect_Level?.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											break;
+										}
+										else if (i <= 4)
+										{
+											// ないですね
+											if (i == 4 && (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] == 4 || !b譜面が存在する[3] && b譜面が存在する[4]))
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i == 3 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] != 4 && (b譜面が存在する[3] || !b譜面が存在する[4]))
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i <= 2)
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+										}
+									}
+									#region [ 選択カーソル ]
+									if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] != 4)
+										TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443, new Rectangle(TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2 * nPlayer, 0, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Height));
+									else
+										TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443, new Rectangle(TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2 * nPlayer, 0, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Height));
+									#endregion
+
+									#endregion
+									break;
+								}
+								else if (nPlayer == 0)
+								{
+									#region [ 通常時の表示 ]
+									//コースが存在するかを参照として、Dan,Tower,Otherの優先度で表示する
+									for (int i = 6; i >= 0; i--)
+									{
+										#region [ コース看板 カラーリング ]
+										if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
+										{
+											if (b譜面が存在する[i])
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
+											else
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
+										}
+										#endregion
+										if (b譜面が存在する[i] && i >= 5)
+										{
+											TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 * (i - 4), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
+											for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+												TJAPlayer3.Tx.SongSelect_Level?.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											break;
+										}
+										else if (i <= 4)
+										{
+											if (i == 4 && !b譜面が存在する[3] && b譜面が存在する[4])
+											{
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level?.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+												break;
+											}
+											else if (i <= 4)
+											{
+												if (i == 4 && !b譜面が存在する[3] && b譜面が存在する[4])
+												{
+													TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+													for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+														TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+												}
+												else if (i == 3 && (b譜面が存在する[3] || !b譜面が存在する[4]))
+												{
+													TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+													for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+														TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+												}
+												else if (i <= 2)
+												{
+													TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+													for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+
+														TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+												}
+											}
+										}
+										#endregion
+									}
+								}
+							}
                             break;
 
                         case C曲リストノード.Eノード種別.BOX:
@@ -1181,10 +1233,17 @@ namespace TJAPlayer3
                             //        CDTXMania.Tx.SongSelect_Frame_Dani.t2D描画(CDTXMania.app.Device, 450, nバーの高さ);
                             //    break;
                     }
-                    if (TJAPlayer3.Tx.SongSelect_Branch_Text != null && TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ] )
-                        TJAPlayer3.Tx.SongSelect_Branch_Text.t2D描画( TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y+21 );
-
-                }
+					if (bコース選択中[1])
+					{
+						if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度[1]])
+							TJAPlayer3.Tx.SongSelect_Branch_Text?.t2D描画(TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y + 21);
+					}
+					else if (bコース選択中[0])
+					{
+						if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0]])
+							TJAPlayer3.Tx.SongSelect_Branch_Text?.t2D描画(TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y + 21);
+					}
+				}
 				#region [ (1) 登場アニメフェーズの描画。]
 				//-----------------
 				for( int i = 0; i < 13; i++ )	// パネルは全13枚。
@@ -1237,14 +1296,14 @@ namespace TJAPlayer3
                             int x = i選曲バーX座標 + 500 - ( (int) ( db割合0to1 * 500 ) );
 							int y = this.ptバーの基本座標[ i ].Y;
                             this.tジャンル別選択されていない曲バーの描画( this.ptバーの座標[ nパネル番号 ].X, TJAPlayer3.Skin.SongSelect_Overall_Y, this.stバー情報[ nパネル番号 ].strジャンル );
-                            if( this.stバー情報[ nパネル番号 ].b分岐[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ] == true && i != 5 )
+                            if( this.stバー情報[ nパネル番号 ].b分岐[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0] ] == true && i != 5 )
                                 TJAPlayer3.Tx.SongSelect_Branch.t2D描画( TJAPlayer3.app.Device, this.ptバーの座標[ nパネル番号 ].X + 66, TJAPlayer3.Skin.SongSelect_Overall_Y-5);
                             if( this.stバー情報[ nパネル番号 ].ar難易度 != null )
                             {
                                 int nX補正 = 0;
-                                if( this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ].ToString().Length == 2 )
+                                if( this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0] ].ToString().Length == 2 )
                                     nX補正 = -6;
-                                this.t小文字表示( this.ptバーの座標[ nパネル番号 ].X + 65 + nX補正, 559, this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ].ToString() );
+                                this.t小文字表示( this.ptバーの座標[ nパネル番号 ].X + 65 + nX補正, 559, this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0] ].ToString() );
                             }
 							//-----------------
 							#endregion
@@ -1284,7 +1343,7 @@ namespace TJAPlayer3
                             this.tジャンル別選択されていない曲バーの描画( xAnime, TJAPlayer3.Skin.SongSelect_Overall_Y, this.stバー情報[ nパネル番号 ].strジャンル );
                         else if (n見た目の行番号 != 5)
                             this.tジャンル別選択されていない曲バーの描画(xAnime, TJAPlayer3.Skin.SongSelect_Overall_Y, this.stバー情報[nパネル番号].strジャンル);
-                        if (this.stバー情報[nパネル番号].b分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度] == true && n見た目の行番号 != 5)
+                        if (this.stバー情報[nパネル番号].b分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0]] == true && n見た目の行番号 != 5)
                             TJAPlayer3.Tx.SongSelect_Branch.t2D描画(TJAPlayer3.app.Device, xAnime + 66, TJAPlayer3.Skin.SongSelect_Overall_Y - 5);
                         //-----------------
                         #endregion
@@ -1301,9 +1360,9 @@ namespace TJAPlayer3
                         if( this.stバー情報[ nパネル番号 ].ar難易度 != null )
                         {
                             int nX補正 = 0;
-                            if( this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ].ToString().Length == 2 )
+                            if( this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0] ].ToString().Length == 2 )
                                 nX補正 = -6;
-                            this.t小文字表示( xAnime + 65 + nX補正, 559, this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ].ToString() );
+                            this.t小文字表示( xAnime + 65 + nX補正, 559, this.stバー情報[ nパネル番号 ].ar難易度[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0] ].ToString() );
                         }
 						//-----------------						
 					}
@@ -1317,110 +1376,109 @@ namespace TJAPlayer3
                     switch (r現在選択中の曲.eノード種別)
                     {
                         case C曲リストノード.Eノード種別.SCORE:
-                            {
-                                if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
-                                {
-                                    // 難易度がTower、Danではない
-                                    if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Tower && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Dan)
-                                    {
-                                        for (int i = 0; i < (int)Difficulty.Edit + 1; i++)
-                                        {
-                                            if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i] >= 0)
-                                            {
-                                                // レベルが0以上
-                                                TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    // エディット
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                                else if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // レベルが0未満 = 譜面がないとみなす
-                                                TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    // エディット
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                                else if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[TJAPlayer3.stage選曲.n現在選択中の曲の難易度] >= 0)
-                                        {
-                                            // 譜面がありますね
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 + (360 * (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 - (int)Difficulty.Tower)), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
-                                        }
-                                        else
-                                        {
-                                            // ないですね
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
-                                            TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 + (360 * (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 - (int)Difficulty.Tower)), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
-                                        }
-                                    }
-                                }
-                                #region[ 星 ]
-                                if (TJAPlayer3.Tx.SongSelect_Level != null)
-                                {
-                                    // 全難易度表示
-                                    // 難易度がTower、Danではない
-                                    if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Tower && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Dan)
-                                    {
-                                        for (int i = 0; i < (int)Difficulty.Edit + 1; i++)
-                                        {
-                                            for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
-                                            {
-                                                // 星11以上はループ終了
-                                                //if (n > 9) break;
-                                                // 裏なら鬼と同じ場所に
-                                                if (i == 3 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4) break;
-                                                if (i == 4 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 == 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
-                                                }
-                                                if (i != 4)
-                                                {
-                                                    TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[TJAPlayer3.stage選曲.n現在選択中の曲の難易度]; i++)
-                                        {
-                                            TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (i * 17), new Rectangle(32 * TJAPlayer3.stage選曲.n現在選択中の曲の難易度, 0, 32, 32));
-                                        }
-                                    }
-                                }
-                                #endregion
-                                #region 選択カーソル
-                                if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Tower && TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != (int)Difficulty.Dan)
-                                {
-                                    if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 != 4)
-                                    {
-                                        TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (TJAPlayer3.stage選曲.n現在選択中の曲の難易度 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443);
-                                    }
-                                    else
-                                    {
-                                        TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443);
+							for (int nPlayer = 1; nPlayer >= 0; nPlayer--)
+							{
+								if (bコース選択中[nPlayer])
+								{
+									#region [ コース選択中の表示 ]
 
+									for (int i = 6; i >= 0; i--)
+									{
+										#region [ コース看板 カラーリング ]
+										if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
+										{
+											if (b譜面が存在する[i])TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
+                                            else
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
+                                        }
+										#endregion
+
+										if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] >= 5 && i >= 5)
+										{
+											TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 * (i - 4), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
+											for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+												TJAPlayer3.Tx.SongSelect_Level?.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											break;
+										}
+										else if (i <= 4)
+										{
+											if (i == 4 && (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] == 4 || !b譜面が存在する[3] && b譜面が存在する[4]))
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i == 3 && TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] != 4 && (b譜面が存在する[3] || !b譜面が存在する[4]))
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i <= 2)
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+										}
                                     }
-                                }
-                                #endregion
-                            }
+									#region [ 選択カーソル ]
+									if (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] != 4)
+										TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (TJAPlayer3.stage選曲.n現在選択中の曲の難易度[nPlayer] * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443, new Rectangle(TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2 * nPlayer, 0, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Height));
+									else
+										TJAPlayer3.Tx.SongSelect_Score_Select?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 443, new Rectangle(TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2 * nPlayer, 0, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Width / 2, TJAPlayer3.Tx.SongSelect_Score_Select.szテクスチャサイズ.Height));
+									#endregion
+
+									#endregion
+									break;
+								}
+								else if (nPlayer == 0)
+								{
+									#region [ 通常時の表示 ]
+									//コースが存在するかを参照として、Dan,Tower,Otherの優先度で表示する
+									for (int i = 6; i >= 0; i--)
+									{
+										#region [ コース看板 カラーリング ]
+										if (TJAPlayer3.Tx.SongSelect_Frame_Score != null)
+										{
+											if (b譜面が存在する[i])
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(1f, 1f, 1f);
+											else
+												TJAPlayer3.Tx.SongSelect_Frame_Score.color4 = new Color4(0.5f, 0.5f, 0.5f);
+										}
+										#endregion
+										if (b譜面が存在する[i] && i >= 5)
+										{
+											TJAPlayer3.Tx.SongSelect_Frame_Score?.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + 120, TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(0, 360 * (i - 4), TJAPlayer3.Tx.SongSelect_Frame_Score.szテクスチャサイズ.Width, 360));
+											for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+												TJAPlayer3.Tx.SongSelect_Level?.t2D下中央基準描画(TJAPlayer3.app.Device, 494, TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											break;
+										}
+										else if (i <= 4)
+										{
+											if (i == 4 && !b譜面が存在する[3] && b譜面が存在する[4])
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (3 * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i == 3 && (b譜面が存在する[3] || !b譜面が存在する[4]))
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+											}
+											else if (i <= 2)
+											{
+												TJAPlayer3.Tx.SongSelect_Frame_Score.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 463, new Rectangle(60 * i, 0, 60, 360));
+												for (int n = 0; n < TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.nレベル[i]; n++)
+													TJAPlayer3.Tx.SongSelect_Level.t2D下中央基準描画(TJAPlayer3.app.Device, 494 + (i * 60), TJAPlayer3.Skin.SongSelect_Overall_Y + 413 - (n * 17), new Rectangle(32 * i, 0, 32, 32));
+                                            }
+                                        }
+                                    }
+									#endregion
+								}
+							}
                             break;
 
                         case C曲リストノード.Eノード種別.BOX:
@@ -1437,17 +1495,18 @@ namespace TJAPlayer3
                             if (TJAPlayer3.Tx.SongSelect_Frame_Random != null)
                                 TJAPlayer3.Tx.SongSelect_Frame_Random.t2D描画(TJAPlayer3.app.Device, 450, TJAPlayer3.Skin.SongSelect_Overall_Y);
                             break;
-                            //case C曲リストノード.Eノード種別.DANI:
-                            //    if (CDTXMania.Tx.SongSelect_Frame_Dani != null)
-                            //        CDTXMania.Tx.SongSelect_Frame_Dani.t2D描画(CDTXMania.app.Device, 450, nバーの高さ);
-                            //    break;
                     }
-                    //if( CDTXMania.Tx.SongSelect_Level != null )
-                    //    CDTXMania.Tx.SongSelect_Level.t2D描画( CDTXMania.app.Device, 518, 169 );
-                    if ( TJAPlayer3.Tx.SongSelect_Branch_Text != null && TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[ TJAPlayer3.stage選曲.n現在選択中の曲の難易度 ] )
-                        TJAPlayer3.Tx.SongSelect_Branch_Text.t2D描画( TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y+21);
-
-                }
+					if (bコース選択中[1])
+					{
+						if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度[1]])
+							TJAPlayer3.Tx.SongSelect_Branch_Text?.t2D描画(TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y + 21);
+					}
+					else if (bコース選択中[0])
+					{
+						if (TJAPlayer3.stage選曲.r現在選択中のスコア.譜面情報.b譜面分岐[TJAPlayer3.stage選曲.n現在選択中の曲の難易度[0]])
+							TJAPlayer3.Tx.SongSelect_Branch_Text?.t2D描画(TJAPlayer3.app.Device, 483, TJAPlayer3.Skin.SongSelect_Overall_Y + 21);
+					}
+				}
 
                 #region [ 項目リストにフォーカスがあって、かつスクロールが停止しているなら、パネルの上下に▲印を描画する。]
 	    		//-----------------
@@ -1698,7 +1757,8 @@ namespace TJAPlayer3
 		private int n現在のスクロールカウンタ;
 		private int n現在の選択行;
 		private int n目標のスクロールカウンタ;
-        private readonly Point[] ptバーの基本座標 = new Point[] { new Point( 0x2c4, 5 ), new Point( 0x272, 56 ), new Point( 0x242, 107 ), new Point( 0x222, 158 ), new Point( 0x210, 209 ), new Point( 0x1d0, 270 ), new Point( 0x224, 362 ), new Point( 0x242, 413 ), new Point( 0x270, 464 ), new Point( 0x2ae, 515 ), new Point( 0x314, 566 ), new Point( 0x3e4, 617 ), new Point( 0x500, 668 ) };
+		public bool[] bコース選択中 = new bool[] { false, false };
+		private readonly Point[] ptバーの基本座標 = new Point[] { new Point( 0x2c4, 5 ), new Point( 0x272, 56 ), new Point( 0x242, 107 ), new Point( 0x222, 158 ), new Point( 0x210, 209 ), new Point( 0x1d0, 270 ), new Point( 0x224, 362 ), new Point( 0x242, 413 ), new Point( 0x270, 464 ), new Point( 0x2ae, 515 ), new Point( 0x314, 566 ), new Point( 0x3e4, 617 ), new Point( 0x500, 668 ) };
         private Point[] ptバーの座標 = new Point[]
         { new Point( -60, 180 ), new Point( 40, 180 ), new Point( 140, 180 ), new Point( 241, 180 ), new Point( 341, 180 ),
           new Point( 590, 180 ),
@@ -1723,8 +1783,6 @@ namespace TJAPlayer3
         //private CTexture tx曲バー_どうよう;
         //private CTexture tx曲バー_ボカロ;
         //private CTexture tx曲バー;
-
-        private CTexture[] tx曲バー_難易度 = new CTexture[ 5 ];
 
         //private CTexture tx譜面分岐曲バー用;
         //private CTexture tx難易度パネル;
@@ -1876,11 +1934,13 @@ namespace TJAPlayer3
                     if( song.arスコア[ f ] != null )
                         this.stバー情報[ i ].b分岐 = song.arスコア[ f ].譜面情報.b譜面分岐;
                 }
-				
-				for( int j = 0; j < 3; j++ )
-					this.stバー情報[ i ].nスキル値[ j ] = (int) song.arスコア[ this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す( song ) ].譜面情報.最大スキル[ j ];
 
-                this.stバー情報[ i ].ttkタイトル = this.ttk曲名テクスチャを生成する( this.stバー情報[ i ].strタイトル文字列, this.stバー情報[i].ForeColor, this.stバー情報[i].BackColor);
+				for (int j = 0; j < 3; j++)
+				{
+					this.stバー情報[i].nスキル値[j] = (int)song.arスコア[this.n現在のアンカ難易度レベルに最も近い難易度レベルを返す(song, 0)].譜面情報.最大スキル[j];
+				}
+
+				this.stバー情報[ i ].ttkタイトル = this.ttk曲名テクスチャを生成する( this.stバー情報[ i ].strタイトル文字列, this.stバー情報[i].ForeColor, this.stバー情報[i].BackColor);
 
 				song = this.r次の曲( song );
 			}
@@ -2000,14 +2060,6 @@ namespace TJAPlayer3
     				//-----------------
 	    			if(TJAPlayer3.Tx.SongSelect_Bar_Genre[8] != null )
                         TJAPlayer3.Tx.SongSelect_Bar_Genre[8].t2D描画( TJAPlayer3.app.Device, x, y );
-	    			//-----------------
-		    		#endregion
-                    break;
-                case "難易度ソート":
-				    #region [ 難易度ソート ]
-    				//-----------------
-	    			if( this.tx曲バー_難易度[ this.n現在選択中の曲の現在の難易度レベル ] != null )
-		    			this.tx曲バー_難易度[ this.n現在選択中の曲の現在の難易度レベル ].t2D描画( TJAPlayer3.app.Device, x, y );
 	    			//-----------------
 		    		#endregion
                     break;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	[Serializable]
 	internal class C曲リストノード

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FDK;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CAct演奏スクロール速度 : CActivity
 	{
@@ -30,7 +30,7 @@ namespace TJAPlayer3
 			{
 				for (int nPlayer = 0; nPlayer < 2; nPlayer++)
 				{
-					this.db現在の譜面スクロール速度[nPlayer][i] = (double)TJAPlayer3.ConfigIni.n譜面スクロール速度[nPlayer][i];
+					this.db現在の譜面スクロール速度[nPlayer][i] = (double)TJAPlayer4.ConfigIni.n譜面スクロール速度[nPlayer][i];
 					this.n速度変更制御タイマ[nPlayer][i] = -1;
 				}
 			}
@@ -44,7 +44,7 @@ namespace TJAPlayer3
 				{
 					for (int nPlayer = 0; nPlayer < 2; nPlayer++)
 					{
-						this.n速度変更制御タイマ[nPlayer].Drums = this.n速度変更制御タイマ[nPlayer].Guitar = this.n速度変更制御タイマ[nPlayer].Bass = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0));
+						this.n速度変更制御タイマ[nPlayer].Drums = this.n速度変更制御タイマ[nPlayer].Guitar = this.n速度変更制御タイマ[nPlayer].Bass = (long)(CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer4.ConfigIni.n演奏速度) / 20.0));
 					}
 					base.b初めての進行描画 = false;
 				}
@@ -54,7 +54,7 @@ namespace TJAPlayer3
 				{
 					for (int i = 0; i < 3; i++)
 					{
-						double db譜面スクロールスピード = (double)TJAPlayer3.ConfigIni.n譜面スクロール速度[nPlayer][i];
+						double db譜面スクロールスピード = (double)TJAPlayer4.ConfigIni.n譜面スクロール速度[nPlayer][i];
 						if (n現在時刻 < this.n速度変更制御タイマ[nPlayer][i])
 						{
 							this.n速度変更制御タイマ[nPlayer][i] = n現在時刻;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CActSortSongs : CActSelectPopupMenu
 	{

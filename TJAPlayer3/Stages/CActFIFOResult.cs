@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using FDK;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CActFIFOResult : CActivity
 	{
@@ -13,20 +13,20 @@ namespace TJAPlayer3
 		public void tフェードアウト開始()
 		{
 			this.mode = EFIFOモード.フェードアウト;
-			this.counter = new CCounter( 0, 500, 2, TJAPlayer3.Timer );
-			if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_FadeIn[1] != null)
-				TJAPlayer3.Tx.Result_FadeIn[1].Opacity = 255;
-			else if (TJAPlayer3.Tx.Result_FadeIn[0] != null)
-				TJAPlayer3.Tx.Result_FadeIn[0].Opacity = 255;
+			this.counter = new CCounter( 0, 500, 2, TJAPlayer4.Timer );
+			if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_FadeIn[1] != null)
+				TJAPlayer4.Tx.Result_FadeIn[1].Opacity = 255;
+			else if (TJAPlayer4.Tx.Result_FadeIn[0] != null)
+				TJAPlayer4.Tx.Result_FadeIn[0].Opacity = 255;
 		}
 		public void tフェードイン開始()
 		{
 			this.mode = EFIFOモード.フェードイン;
-			this.counter = new CCounter( 0, 100, 5, TJAPlayer3.Timer );
-			if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_FadeIn[1] != null)
-				TJAPlayer3.Tx.Result_FadeIn[1].Opacity = 255;
-			else if (TJAPlayer3.Tx.Result_FadeIn[0] != null)
-				TJAPlayer3.Tx.Result_FadeIn[0].Opacity = 255;
+			this.counter = new CCounter( 0, 100, 5, TJAPlayer4.Timer );
+			if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_FadeIn[1] != null)
+				TJAPlayer4.Tx.Result_FadeIn[1].Opacity = 255;
+			else if (TJAPlayer4.Tx.Result_FadeIn[0] != null)
+				TJAPlayer4.Tx.Result_FadeIn[0].Opacity = 255;
 		}
         public void tフェードイン完了()		// #25406 2011.6.9 yyagi
 		{
@@ -64,30 +64,30 @@ namespace TJAPlayer3
 			if (this.mode == EFIFOモード.フェードアウト)
 			{
 				int y = this.counter.n現在の値 >= 360 ? 360 : this.counter.n現在の値;
-				if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_FadeIn[1] != null)
+				if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_FadeIn[1] != null)
 				{
-					TJAPlayer3.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer3.app.Device, 0, this.counter.n現在の値 >= 360 ? 0 : -360 + y, new Rectangle(0, 0, 1280, 380));
-					TJAPlayer3.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer3.app.Device, 0, 720 - y, new Rectangle(0, 380, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer4.app.Device, 0, this.counter.n現在の値 >= 360 ? 0 : -360 + y, new Rectangle(0, 0, 1280, 380));
+					TJAPlayer4.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer4.app.Device, 0, 720 - y, new Rectangle(0, 380, 1280, 360));
 				}
 				else
                 {
-					TJAPlayer3.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer3.app.Device, 0, this.counter.n現在の値 >= 360 ? 0 : -360 + y, new Rectangle(0, 0, 1280, 380));
-					TJAPlayer3.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer3.app.Device, 0, 720 - y, new Rectangle(0, 380, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer4.app.Device, 0, this.counter.n現在の値 >= 360 ? 0 : -360 + y, new Rectangle(0, 0, 1280, 380));
+					TJAPlayer4.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer4.app.Device, 0, 720 - y, new Rectangle(0, 380, 1280, 360));
 				}
 			}
 			else
 			{
-				if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_FadeIn[1] != null)
+				if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_FadeIn[1] != null)
 				{
-					TJAPlayer3.Tx.Result_FadeIn[1].Opacity = (((100 - this.counter.n現在の値) * 0xff) / 100);
-					TJAPlayer3.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer3.app.Device, 0, 0, new Rectangle(0, 0, 1280, 360));
-					TJAPlayer3.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer3.app.Device, 0, 360, new Rectangle(0, 380, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[1].Opacity = (((100 - this.counter.n現在の値) * 0xff) / 100);
+					TJAPlayer4.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer4.app.Device, 0, 0, new Rectangle(0, 0, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[1]?.t2D描画(TJAPlayer4.app.Device, 0, 360, new Rectangle(0, 380, 1280, 360));
 				}
 				else
 				{
-					TJAPlayer3.Tx.Result_FadeIn[0].Opacity = (((100 - this.counter.n現在の値) * 0xff) / 100);
-					TJAPlayer3.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer3.app.Device, 0, 0, new Rectangle(0, 0, 1280, 360));
-					TJAPlayer3.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer3.app.Device, 0, 360, new Rectangle(0, 380, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[0].Opacity = (((100 - this.counter.n現在の値) * 0xff) / 100);
+					TJAPlayer4.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer4.app.Device, 0, 0, new Rectangle(0, 0, 1280, 360));
+					TJAPlayer4.Tx.Result_FadeIn[0]?.t2D描画(TJAPlayer4.app.Device, 0, 360, new Rectangle(0, 380, 1280, 360));
 				}
 			}
 			if ( this.mode == EFIFOモード.フェードアウト )

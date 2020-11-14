@@ -10,7 +10,7 @@ using System.IO;
 using FDK;
 using System.Reflection;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class Program
 	{
@@ -76,9 +76,9 @@ namespace TJAPlayer3
 
 
                 #region [DLLの存在チェック]
-                if ( !tDLLの存在チェック( "dll\\SlimDX" + TJAPlayer3.SLIMDXDLL + ".dll",
-					"SlimDX" + TJAPlayer3.SLIMDXDLL + ".dll またはその依存するdllが存在しません。" + newLine + "DTXManiaをダウンロードしなおしてください。",
-					"SlimDX" + TJAPlayer3.SLIMDXDLL + ".dll, or its depended DLL, is not found." + newLine + "Please download DTXMania again."
+                if ( !tDLLの存在チェック( "dll\\SlimDX" + TJAPlayer4.SLIMDXDLL + ".dll",
+					"SlimDX" + TJAPlayer4.SLIMDXDLL + ".dll またはその依存するdllが存在しません。" + newLine + "DTXManiaをダウンロードしなおしてください。",
+					"SlimDX" + TJAPlayer4.SLIMDXDLL + ".dll, or its depended DLL, is not found." + newLine + "Please download DTXMania again."
 					) ) bDLLnotfound = true;
 				if ( !tDLLの存在チェック( "dll\\FDK.dll",
 					"FDK.dll またはその依存するdllが存在しません。" + newLine + "DTXManiaをダウンロードしなおしてください。",
@@ -92,9 +92,9 @@ namespace TJAPlayer3
 					"SoundDecoder.dll またはその依存するdllが存在しません。" + newLine + "DTXManiaをダウンロードしなおしてください。",
 					"SoundDecoder.dll, or its depended DLL, is not found." + newLine + "Please download DTXMania again."
 					) ) bDLLnotfound = true;
-				if ( !tDLLの存在チェック( TJAPlayer3.D3DXDLL,
-					TJAPlayer3.D3DXDLL + " が存在しません。" + newLine + "DirectX Redist フォルダの DXSETUP.exe を実行し、" + newLine + "必要な DirectX ランタイムをインストールしてください。",
-					TJAPlayer3.D3DXDLL + " is not found." + newLine + "Please execute DXSETUP.exe in \"DirectX Redist\" folder, to install DirectX runtimes required for DTXMania.",
+				if ( !tDLLの存在チェック( TJAPlayer4.D3DXDLL,
+					TJAPlayer4.D3DXDLL + " が存在しません。" + newLine + "DirectX Redist フォルダの DXSETUP.exe を実行し、" + newLine + "必要な DirectX ランタイムをインストールしてください。",
+					TJAPlayer4.D3DXDLL + " is not found." + newLine + "Please execute DXSETUP.exe in \"DirectX Redist\" folder, to install DirectX runtimes required for DTXMania.",
 					true
 					) ) bDLLnotfound = true;
 				if ( !tDLLの存在チェック( "dll\\bass.dll",
@@ -140,7 +140,7 @@ namespace TJAPlayer3
 					try
 #endif
 					{
-						using ( var mania = new TJAPlayer3() )
+						using ( var mania = new TJAPlayer4() )
 							mania.Run();
 
 						Trace.WriteLine( "" );

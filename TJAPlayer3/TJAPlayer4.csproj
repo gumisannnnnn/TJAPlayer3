@@ -8,11 +8,11 @@
     <ProjectGuid>{81BEC512-8074-4BD1-8A3C-AC73BC7BF846}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TJAPlayer3</RootNamespace>
-    <AssemblyName>TJAPlayer3</AssemblyName>
+    <RootNamespace>TJAPlayer4</RootNamespace>
+    <AssemblyName>TJAPlayer4</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>Resources\TJAPlayer3.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\TJAPlayer4.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
@@ -51,6 +51,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Optimize>false</Optimize>
     <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\Test\</OutputPath>
@@ -63,10 +64,12 @@
     <NoWarn>0219</NoWarn>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>TJAPlayer3.manifest</ApplicationManifest>
+    <ApplicationManifest>TJAPlayer4.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bass.Net">
@@ -125,7 +128,7 @@
     </Compile>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TJAPlayer3.manifest" />
+    <None Include="TJAPlayer4.manifest" />
     <None Include="DTXManiaGR.exe.x86.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -258,7 +261,7 @@
     <Compile Include="Plugins\IPluginHost.cs" />
     <Compile Include="Common\CActFlushGPU.cs" />
     <Compile Include="Common\CConfigIni.cs" />
-    <Compile Include="Common\TJAPlayer3.cs" />
+    <Compile Include="Common\TJAPlayer4.cs" />
     <Compile Include="Common\CDTXVersion.cs" />
     <Compile Include="Common\ConfigIniToSongGainControllerBinder.cs" />
     <Compile Include="Common\ConfigIniToSoundGroupLevelControllerBinder.cs" />
@@ -329,7 +332,7 @@ move /y "$(TargetDir)SlimDX.dll" "$(SolutionDir)Test\dll\"
 move /y "$(TargetDir)CSharpTest.Net.Collections.*" "$(SolutionDir)Test\dll\"
 copy /y "$(SolutionDir)Readme.txt" "$(SolutionDir)Test\"
 call "$(DevEnvDir)..\Tools\VsDevCmd.bat"
-"editbin.exe" /LARGEADDRESSAWARE "$(SolutionDir)Test\TJAPlayer3.exe"</PostBuildEvent>
+"editbin.exe" /LARGEADDRESSAWARE "$(SolutionDir)Test\TJAPlayer4.exe"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\SharpDX.2.6.3\build\SharpDX.targets" Condition="Exists('packages\SharpDX.2.6.3\build\SharpDX.targets')" />
 </Project>

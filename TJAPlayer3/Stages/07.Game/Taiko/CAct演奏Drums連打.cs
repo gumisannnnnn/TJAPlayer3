@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using SlimDX;
 using FDK;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
     internal class CAct演奏Drums連打 : CActivity
     {
@@ -117,7 +117,7 @@ namespace TJAPlayer3
             //仮置き
             int[] nRollBalloon = new int[] { -3, 514, 0, 0 };
             int[] nRollNumber = new int[] { 48, 559, 0, 0 };
-            for( int i = 0; i < TJAPlayer3.ConfigIni.nPlayerCount; i++ )
+            for( int i = 0; i < TJAPlayer4.ConfigIni.nPlayerCount; i++ )
             {
                 //CDTXMania.act文字コンソール.tPrint(0, 0, C文字コンソール.Eフォント種別.白, this.ct連打枠カウンター[player].n現在の値.ToString());
                 if ( this.ct連打枠カウンター[ player ].b終了値に達してない)
@@ -127,12 +127,12 @@ namespace TJAPlayer3
                         FadeOut[player].Start();
                     }
                     var opacity = (int)FadeOut[player].GetAnimation();
-                    TJAPlayer3.Tx.Balloon_Roll.Opacity = opacity;
-                    TJAPlayer3.Tx.Balloon_Number_Roll.Opacity = opacity;
+                    TJAPlayer4.Tx.Balloon_Roll.Opacity = opacity;
+                    TJAPlayer4.Tx.Balloon_Number_Roll.Opacity = opacity;
 
 
-                    TJAPlayer3.Tx.Balloon_Roll.t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Game_Balloon_Roll_Frame_X[player], TJAPlayer3.Skin.Game_Balloon_Roll_Frame_Y[player]);
-                    this.t文字表示(TJAPlayer3.Skin.Game_Balloon_Roll_Number_X[player], TJAPlayer3.Skin.Game_Balloon_Roll_Number_Y[player], n連打数.ToString(), n連打数, player);
+                    TJAPlayer4.Tx.Balloon_Roll.t2D描画(TJAPlayer4.app.Device, TJAPlayer4.Skin.Game_Balloon_Roll_Frame_X[player], TJAPlayer4.Skin.Game_Balloon_Roll_Frame_Y[player]);
+                    this.t文字表示(TJAPlayer4.Skin.Game_Balloon_Roll_Number_X[player], TJAPlayer4.Skin.Game_Balloon_Roll_Number_Y[player], n連打数.ToString(), n連打数, player);
                 }
             }
 
@@ -141,7 +141,7 @@ namespace TJAPlayer3
 
         public void t枠表示時間延長( int player )
         {
-            this.ct連打枠カウンター[ player ] = new CCounter( 0, 1500, 1, TJAPlayer3.Timer );
+            this.ct連打枠カウンター[ player ] = new CCounter( 0, 1500, 1, TJAPlayer4.Timer );
             FadeOut[player].Counter.n現在の値 = 0;
             FadeOut[player].Counter.t停止();
         }
@@ -187,18 +187,18 @@ namespace TJAPlayer3
 				{
 					if( this.st文字位置[ i ].ch == ch )
 					{
-						Rectangle rectangle = new Rectangle(TJAPlayer3.Skin.Game_Balloon_Number_Size[0] * i, 0, TJAPlayer3.Skin.Game_Balloon_Number_Size[0], TJAPlayer3.Skin.Game_Balloon_Number_Size[1]);
+						Rectangle rectangle = new Rectangle(TJAPlayer4.Skin.Game_Balloon_Number_Size[0] * i, 0, TJAPlayer4.Skin.Game_Balloon_Number_Size[0], TJAPlayer4.Skin.Game_Balloon_Number_Size[1]);
 
-						if(TJAPlayer3.Tx.Balloon_Number_Roll != null )
+						if(TJAPlayer4.Tx.Balloon_Number_Roll != null )
 						{
-                            TJAPlayer3.Tx.Balloon_Number_Roll.vc拡大縮小倍率.X = TJAPlayer3.Skin.Game_Balloon_Roll_Number_Scale;
-                            TJAPlayer3.Tx.Balloon_Number_Roll.vc拡大縮小倍率.Y = TJAPlayer3.Skin.Game_Balloon_Roll_Number_Scale + RollScale[this.ct連打アニメ[nPlayer].n現在の値];
-                            TJAPlayer3.Tx.Balloon_Number_Roll.t2D拡大率考慮下基準描画( TJAPlayer3.app.Device, x - ( ( (TJAPlayer3.Skin.Game_Balloon_Number_Padding + 2) * n桁数 ) / 2 ), y, rectangle );
+                            TJAPlayer4.Tx.Balloon_Number_Roll.vc拡大縮小倍率.X = TJAPlayer4.Skin.Game_Balloon_Roll_Number_Scale;
+                            TJAPlayer4.Tx.Balloon_Number_Roll.vc拡大縮小倍率.Y = TJAPlayer4.Skin.Game_Balloon_Roll_Number_Scale + RollScale[this.ct連打アニメ[nPlayer].n現在の値];
+                            TJAPlayer4.Tx.Balloon_Number_Roll.t2D拡大率考慮下基準描画( TJAPlayer4.app.Device, x - ( ( (TJAPlayer4.Skin.Game_Balloon_Number_Padding + 2) * n桁数 ) / 2 ), y, rectangle );
 						}
 						break;
 					}
 				}
-				x += ( TJAPlayer3.Skin.Game_Balloon_Number_Padding - ( n桁数 > 2 ? n桁数 * 2 : 0 ) );
+				x += ( TJAPlayer4.Skin.Game_Balloon_Number_Padding - ( n桁数 > 2 ? n桁数 * 2 : 0 ) );
 			}
 		}
     }

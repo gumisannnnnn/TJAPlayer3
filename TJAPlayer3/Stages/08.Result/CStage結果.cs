@@ -3,7 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using FDK;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CStage結果 : CStage
 	{
@@ -78,22 +78,22 @@ namespace TJAPlayer3
 				{
 					this.nランク値[ i ] = -1;
 					this.fPerfect率[ i ] = this.fGreat率[ i ] = this.fGood率[ i ] = this.fPoor率[ i ] = this.fMiss率[ i ] = 0.0f;    // #28500 2011.5.24 yyagi
-					if ((((i != 0) || (TJAPlayer3.DTX[0].bチップがある.Drums))))
+					if ((((i != 0) || (TJAPlayer4.DTX[0].bチップがある.Drums))))
 					{
 						CScoreIni.C演奏記録 part = this.st演奏記録[ i ];
 						bool bIsAutoPlay = true;
 						switch( i )
 						{
 							case 0:
-								bIsAutoPlay = TJAPlayer3.ConfigIni.bAutoPlay[0];
+								bIsAutoPlay = TJAPlayer4.ConfigIni.bAutoPlay[0];
 								break;
 
 							case 1:
-								bIsAutoPlay = TJAPlayer3.ConfigIni.bAutoPlay[0];
+								bIsAutoPlay = TJAPlayer4.ConfigIni.bAutoPlay[0];
 								break;
 
 							case 2:
-								bIsAutoPlay = TJAPlayer3.ConfigIni.bAutoPlay[0];
+								bIsAutoPlay = TJAPlayer4.ConfigIni.bAutoPlay[0];
 								break;
 						}
 						this.fPerfect率[i] = bIsAutoPlay ? 0f : ((100f * part.nPerfect数[0]) / ((float)part.n全チップ数));
@@ -111,7 +111,7 @@ namespace TJAPlayer3
 
 				#region [ .score.ini の作成と出力 ]
 				//---------------------
-				string str = TJAPlayer3.DTX[0].strファイル名の絶対パス + ".score.ini";
+				string str = TJAPlayer4.DTX[0].strファイル名の絶対パス + ".score.ini";
 				CScoreIni ini = new CScoreIni( str );
 
 				bool[] b今までにフルコンボしたことがある = new bool[] { false, false, false };
@@ -136,7 +136,7 @@ namespace TJAPlayer3
 					}
 
 					// 新記録スコアチェック
-					if ((this.st演奏記録[i].nスコア[0] > ini.stセクション[i * 2].nスコア[0]) && !TJAPlayer3.ConfigIni.bAutoPlay[0])
+					if ((this.st演奏記録[i].nスコア[0] > ini.stセクション[i * 2].nスコア[0]) && !TJAPlayer4.ConfigIni.bAutoPlay[0])
 					{
 						this.b新記録スコア[ i ] = true;
 						ini.stセクション[ i * 2 ] = this.st演奏記録[ i ];
@@ -151,7 +151,7 @@ namespace TJAPlayer3
 
 					// ラストプレイ #23595 2011.1.9 ikanick
 					// オートじゃなければプレイ結果を書き込む
-					if (TJAPlayer3.ConfigIni.bAutoPlay[0] == false)
+					if (TJAPlayer4.ConfigIni.bAutoPlay[0] == false)
 					{
 						ini.stセクション[i + 6] = this.st演奏記録[ i ];
                     }
@@ -180,13 +180,13 @@ namespace TJAPlayer3
                     }
                     //---------------------------------------------------------------------/
 				}
-                if( TJAPlayer3.ConfigIni.bScoreIniを出力する )
+                if( TJAPlayer4.ConfigIni.bScoreIniを出力する )
 				    ini.t書き出し( str );
 				//---------------------
 				#endregion
 
 				#region [ リザルト画面への演奏回数の更新 #24281 2011.1.30 yyagi]
-                if( TJAPlayer3.ConfigIni.bScoreIniを出力する )
+                if( TJAPlayer4.ConfigIni.bScoreIniを出力する )
                 {
                     this.n演奏回数.Drums = ini.stファイル.PlayCountDrums;
                     this.n演奏回数.Guitar = ini.stファイル.PlayCountGuitar;
@@ -195,9 +195,9 @@ namespace TJAPlayer3
 				#endregion
 				#region [ 選曲画面の譜面情報の更新 ]
 				//---------------------
-				if( !TJAPlayer3.bコンパクトモード )
+				if( !TJAPlayer4.bコンパクトモード )
 				{
-					Cスコア cスコア = TJAPlayer3.stage選曲.r確定されたスコア;
+					Cスコア cスコア = TJAPlayer4.stage選曲.r確定されたスコア;
 					bool[] b更新が必要か否か = new bool[ 3 ];
 					CScoreIni.t更新条件を取得する( out b更新が必要か否か[ 0 ], out b更新が必要か否か[ 1 ], out b更新が必要か否か[ 2 ] );
 					for( int m = 0; m < 3; m++ )
@@ -224,7 +224,7 @@ namespace TJAPlayer3
 				#endregion
 
 				// Discord Presenseの更新
-				Discord.UpdatePresence(TJAPlayer3.DTX[0].TITLE + ".tja", Properties.Discord.Stage_Result + (TJAPlayer3.ConfigIni.bAutoPlay[0] == true ? " (" + Properties.Discord.Info_IsAuto + ")" : ""), TJAPlayer3.StartupTime);
+				Discord.UpdatePresence(TJAPlayer4.DTX[0].TITLE + ".tja", Properties.Discord.Stage_Result + (TJAPlayer4.ConfigIni.bAutoPlay[0] == true ? " (" + Properties.Discord.Info_IsAuto + ")" : ""), TJAPlayer4.StartupTime);
 
 				base.On活性化();
 			}
@@ -238,7 +238,7 @@ namespace TJAPlayer3
 		{
 			if( this.rResultSound != null )
 			{
-				TJAPlayer3.Sound管理.tサウンドを破棄する( this.rResultSound );
+				TJAPlayer4.Sound管理.tサウンドを破棄する( this.rResultSound );
 				this.rResultSound = null;
 			}
 			base.On非活性化();
@@ -276,7 +276,7 @@ namespace TJAPlayer3
 				int num;
 				if (base.b初めての進行描画)
 				{
-					this.ct登場用 = new CCounter(0, 100, 5, TJAPlayer3.Timer);
+					this.ct登場用 = new CCounter(0, 100, 5, TJAPlayer4.Timer);
 					this.actFI.tフェードイン開始();
 					base.eフェーズID = CStage.Eフェーズ.共通_フェードイン;
 					if (this.rResultSound != null)
@@ -300,21 +300,21 @@ namespace TJAPlayer3
 				}
 
 				// 描画
-				if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_Background[1] != null)
+				if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_Background[1] != null)
 				{
-					TJAPlayer3.Tx.Result_Background[1]?.t2D描画(TJAPlayer3.app.Device, 0, 0);
+					TJAPlayer4.Tx.Result_Background[1]?.t2D描画(TJAPlayer4.app.Device, 0, 0);
 				}
 				else
 				{
-					TJAPlayer3.Tx.Result_Background[0]?.t2D描画(TJAPlayer3.app.Device, 0, 0);
+					TJAPlayer4.Tx.Result_Background[0]?.t2D描画(TJAPlayer4.app.Device, 0, 0);
 				}
-				if (TJAPlayer3.ConfigIni.nPlayerCount == 2 && TJAPlayer3.Tx.Result_Header[1] != null)
+				if (TJAPlayer4.ConfigIni.nPlayerCount == 2 && TJAPlayer4.Tx.Result_Header[1] != null)
 				{
-					TJAPlayer3.Tx.Result_Header[1]?.t2D描画(TJAPlayer3.app.Device, 0, 0);
+					TJAPlayer4.Tx.Result_Header[1]?.t2D描画(TJAPlayer4.app.Device, 0, 0);
 				}
 				else
 				{
-					TJAPlayer3.Tx.Result_Header[0]?.t2D描画(TJAPlayer3.app.Device, 0, 0);
+					TJAPlayer4.Tx.Result_Header[0]?.t2D描画(TJAPlayer4.app.Device, 0, 0);
 				}
 				if ( this.actResultImage.On進行描画() == 0 )
 				{
@@ -331,11 +331,11 @@ namespace TJAPlayer3
 				}
 
                 #region ネームプレート
-                for (int i = 0; i < TJAPlayer3.ConfigIni.nPlayerCount; i++)
+                for (int i = 0; i < TJAPlayer4.ConfigIni.nPlayerCount; i++)
                 {
-                    if (TJAPlayer3.Tx.NamePlate[i] != null)
+                    if (TJAPlayer4.Tx.NamePlate[i] != null)
                     {
-                        TJAPlayer3.Tx.NamePlate[i].t2D描画(TJAPlayer3.app.Device, TJAPlayer3.Skin.Result_NamePlate_X[i], TJAPlayer3.Skin.Result_NamePlate_Y[i]);
+                        TJAPlayer4.Tx.NamePlate[i].t2D描画(TJAPlayer4.app.Device, TJAPlayer4.Skin.Result_NamePlate_X[i], TJAPlayer4.Skin.Result_NamePlate_Y[i]);
                     }
                 }
                 #endregion
@@ -353,8 +353,8 @@ namespace TJAPlayer3
 				}
 				#region [ #24609 2011.3.14 yyagi ランク更新or演奏型スキル更新時、リザルト画像をpngで保存する ]
 				if ( this.bアニメが完了 == true && this.bIsCheckedWhetherResultScreenShouldSaveOrNot == false	// #24609 2011.3.14 yyagi; to save result screen in case BestRank or HiSkill.
-					&& TJAPlayer3.ConfigIni.bScoreIniを出力する
-					&& TJAPlayer3.ConfigIni.bIsAutoResultCapture)												// #25399 2011.6.9 yyagi
+					&& TJAPlayer4.ConfigIni.bScoreIniを出力する
+					&& TJAPlayer4.ConfigIni.bIsAutoResultCapture)												// #25399 2011.6.9 yyagi
 				{
 					CheckAndSaveResultScreen(true);
 					this.bIsCheckedWhetherResultScreenShouldSaveOrNot = true;
@@ -363,9 +363,9 @@ namespace TJAPlayer3
 
 				// キー入力
 
-				if( TJAPlayer3.act現在入力を占有中のプラグイン == null )
+				if( TJAPlayer4.act現在入力を占有中のプラグイン == null )
 				{
-					if( ( ( TJAPlayer3.Pad.b押されたDGB( Eパッド.CY ) || TJAPlayer3.Pad.b押された( E楽器パート.DRUMS, Eパッド.RD ) ) || ( TJAPlayer3.Pad.b押された( E楽器パート.DRUMS, Eパッド.LC ) || TJAPlayer3.Input管理.Keyboard.bキーが押された( (int)SlimDX.DirectInput.Key.Return ) ) ) && !this.bアニメが完了 )
+					if( ( ( TJAPlayer4.Pad.b押されたDGB( Eパッド.CY ) || TJAPlayer4.Pad.b押された( E楽器パート.DRUMS, Eパッド.RD ) ) || ( TJAPlayer4.Pad.b押された( E楽器パート.DRUMS, Eパッド.LC ) || TJAPlayer4.Input管理.Keyboard.bキーが押された( (int)SlimDX.DirectInput.Key.Return ) ) ) && !this.bアニメが完了 )
 					{
 						this.actFI.tフェードイン完了();					// #25406 2011.6.9 yyagi
 						this.actResultImage.tアニメを完了させる();
@@ -383,16 +383,16 @@ namespace TJAPlayer3
 					#endregion
 					if ( base.eフェーズID == CStage.Eフェーズ.共通_通常状態 )
 					{
-						if ( TJAPlayer3.Input管理.Keyboard.bキーが押された( (int)SlimDX.DirectInput.Key.Escape ) )
+						if ( TJAPlayer4.Input管理.Keyboard.bキーが押された( (int)SlimDX.DirectInput.Key.Escape ) )
 						{
-							TJAPlayer3.Skin.sound取消音.t再生する();
+							TJAPlayer4.Skin.sound取消音.t再生する();
 							this.actFO.tフェードアウト開始();
 							base.eフェーズID = CStage.Eフェーズ.共通_フェードアウト;
 							this.eフェードアウト完了時の戻り値 = E戻り値.完了;
 						}
-						if ( ( ( TJAPlayer3.Pad.b押されたDGB( Eパッド.CY ) || TJAPlayer3.Pad.b押された( E楽器パート.DRUMS, Eパッド.RD ) ) || ( TJAPlayer3.Pad.b押された( E楽器パート.DRUMS, Eパッド.LC ) || TJAPlayer3.Input管理.Keyboard.bキーが押された( (int) SlimDX.DirectInput.Key.Return ) ) ) && this.bアニメが完了 )
+						if ( ( ( TJAPlayer4.Pad.b押されたDGB( Eパッド.CY ) || TJAPlayer4.Pad.b押された( E楽器パート.DRUMS, Eパッド.RD ) ) || ( TJAPlayer4.Pad.b押された( E楽器パート.DRUMS, Eパッド.LC ) || TJAPlayer4.Input管理.Keyboard.bキーが押された( (int) SlimDX.DirectInput.Key.Return ) ) ) && this.bアニメが完了 )
 						{
-							TJAPlayer3.Skin.sound取消音.t再生する();
+							TJAPlayer4.Skin.sound取消音.t再生する();
 //							this.actFO.tフェードアウト開始();
 							base.eフェーズID = CStage.Eフェーズ.共通_フェードアウト;
 							this.eフェードアウト完了時の戻り値 = E戻り値.完了;
@@ -443,7 +443,7 @@ namespace TJAPlayer3
 		/// <param name="bIsAutoSave">true=自動保存モード, false=手動保存モード</param>
 		private void CheckAndSaveResultScreen(bool bIsAutoSave)
 		{
-			string path = Path.GetDirectoryName(TJAPlayer3.DTX[0].strファイル名の絶対パス);
+			string path = Path.GetDirectoryName(TJAPlayer4.DTX[0].strファイル名の絶対パス);
 			string datetime = DateTime.Now.ToString( "yyyyMMddHHmmss" );
 			if ( bIsAutoSave )
 			{
@@ -454,9 +454,9 @@ namespace TJAPlayer3
 					{
 						string strPart = ( (E楽器パート) ( i ) ).ToString();
 						string strRank = ( (CScoreIni.ERANK) ( this.nランク値[ i ] ) ).ToString();
-						string strFullPath = TJAPlayer3.DTX[0].strファイル名の絶対パス + "." + datetime + "_" + strPart + "_" + strRank + ".png";
+						string strFullPath = TJAPlayer4.DTX[0].strファイル名の絶対パス + "." + datetime + "_" + strPart + "_" + strRank + ".png";
 						//Surface.ToFile( pSurface, strFullPath, ImageFileFormat.Png );
-						TJAPlayer3.app.SaveResultScreen( strFullPath );
+						TJAPlayer4.app.SaveResultScreen( strFullPath );
 					}
 				}
 			}

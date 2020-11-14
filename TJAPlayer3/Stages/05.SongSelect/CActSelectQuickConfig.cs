@@ -7,7 +7,7 @@ using System.IO;
 using SlimDX;
 using FDK;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CActSelectQuickConfig : CActSelectPopupMenu
 	{
@@ -52,29 +52,29 @@ namespace TJAPlayer3
 			#region [ 共通 Target/AutoMode/AutoLane ]
 			if (nPlayer == 1)
 			{
-				l.Add(new CItemInteger("PlayerCount", 1, 2, TJAPlayer3.ConfigIni.nPlayerCount, "", ""));
+				l.Add(new CItemInteger("PlayerCount", 1, 2, TJAPlayer4.ConfigIni.nPlayerCount, "", ""));
 			}
 			#endregion
 			#region [ 個別 ScrollSpeed ]
-			l.Add(new CItemInteger("ばいそく", 0, 1999, TJAPlayer3.ConfigIni.n譜面スクロール速度[nPlayer][nInst], "", ""));
+			l.Add(new CItemInteger("ばいそく", 0, 1999, TJAPlayer4.ConfigIni.n譜面スクロール速度[nPlayer][nInst], "", ""));
 			#endregion
 			#region [ 共通 Dark/Risky/PlaySpeed ]
 			if (nPlayer == 0)
 			{
-				l.Add(new CItemInteger("演奏速度", 5, 40, TJAPlayer3.ConfigIni.n演奏速度, "", ""));
+				l.Add(new CItemInteger("演奏速度", 5, 40, TJAPlayer4.ConfigIni.n演奏速度, "", ""));
 			}
 			#endregion
 			#region [ 個別 Sud/Hid ]
-			l.Add(new CItemList("ランダム", CItemBase.Eパネル種別.通常, (int)TJAPlayer3.ConfigIni.eRandom[nPlayer].Taiko, "", "",
+			l.Add(new CItemList("ランダム", CItemBase.Eパネル種別.通常, (int)TJAPlayer4.ConfigIni.eRandom[nPlayer].Taiko, "", "",
 				new string[] { "OFF", "RANDOM", "あべこべ", "SUPER", "HYPER" }));
-			l.Add(new CItemList("ドロン", CItemBase.Eパネル種別.通常, (int)TJAPlayer3.ConfigIni.eSTEALTH[nPlayer], "", "",
+			l.Add(new CItemList("ドロン", CItemBase.Eパネル種別.通常, (int)TJAPlayer4.ConfigIni.eSTEALTH[nPlayer], "", "",
 				new string[] { "OFF", "ドロン", "ステルス" }));
 			if (nPlayer == 0)
 			{
-				l.Add(new CItemList("ゲーム", CItemBase.Eパネル種別.通常, (int)TJAPlayer3.ConfigIni.eGameMode, "", "",
+				l.Add(new CItemList("ゲーム", CItemBase.Eパネル種別.通常, (int)TJAPlayer4.ConfigIni.eGameMode, "", "",
 				new string[] { "OFF", "完走!", "完走!激辛" }));
 			}
-			l.Add(new CItemList("ShinuchiMode", CItemBase.Eパネル種別.通常, TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer] ? 1 : 0, "", "", new string[] { "OFF", "ON" }));
+			l.Add(new CItemList("ShinuchiMode", CItemBase.Eパネル種別.通常, TJAPlayer4.ConfigIni.ShinuchiMode[nPlayer] ? 1 : 0, "", "", new string[] { "OFF", "ON" }));
 			#endregion
 			#region [ 共通 SET切り替え/More/Return ]
 			l.Add(new CSwitchItemList("More...", CItemBase.Eパネル種別.通常, 0, "", "", ""));
@@ -107,17 +107,17 @@ namespace TJAPlayer3
 				switch (n現在の選択行)
 				{
 					case (int)EOrder1P.ScrollSpeed:
-						TJAPlayer3.ConfigIni.n譜面スクロール速度[nPlayer][nCurrentTarget] = (int)GetObj現在値((int)EOrder1P.ScrollSpeed);
+						TJAPlayer4.ConfigIni.n譜面スクロール速度[nPlayer][nCurrentTarget] = (int)GetObj現在値((int)EOrder1P.ScrollSpeed);
 						break;
 
 					case (int)EOrder1P.PlaySpeed:
-						TJAPlayer3.ConfigIni.n演奏速度 = (int)GetObj現在値((int)EOrder1P.PlaySpeed);
+						TJAPlayer4.ConfigIni.n演奏速度 = (int)GetObj現在値((int)EOrder1P.PlaySpeed);
 						break;
 					case (int)EOrder1P.Random:
-						TJAPlayer3.ConfigIni.eRandom[nPlayer].Taiko = (Eランダムモード)GetIndex((int)EOrder1P.Random);
+						TJAPlayer4.ConfigIni.eRandom[nPlayer].Taiko = (Eランダムモード)GetIndex((int)EOrder1P.Random);
 						break;
 					case (int)EOrder1P.Stealth:
-						TJAPlayer3.ConfigIni.eSTEALTH[nPlayer] = (Eステルスモード)GetIndex((int)EOrder1P.Stealth);
+						TJAPlayer4.ConfigIni.eSTEALTH[nPlayer] = (Eステルスモード)GetIndex((int)EOrder1P.Stealth);
 						break;
 					case (int)EOrder1P.GameMode:
 						EGame game = EGame.OFF;
@@ -127,10 +127,10 @@ namespace TJAPlayer3
 							case 1: game = EGame.完走叩ききりまショー; break;
 							case 2: game = EGame.完走叩ききりまショー激辛; break;
 						}
-						TJAPlayer3.ConfigIni.eGameMode = game;
+						TJAPlayer4.ConfigIni.eGameMode = game;
 						break;
 					case (int)EOrder1P.ShinuchiMode:
-						TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer] = !TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer];
+						TJAPlayer4.ConfigIni.ShinuchiMode[nPlayer] = !TJAPlayer4.ConfigIni.ShinuchiMode[nPlayer];
 						break;
 					case (int)EOrder1P.More:
 						SetAutoParameters();            // 簡易CONFIGメニュー脱出に伴い、簡易CONFIG内のAUTOの設定をConfigIniクラスに反映する
@@ -151,19 +151,19 @@ namespace TJAPlayer3
 				switch (n現在の選択行)
 				{
 					case (int)EOrder2P.PlayerCount:
-						TJAPlayer3.ConfigIni.nPlayerCount = (int)GetObj現在値((int)EOrder2P.PlayerCount);
+						TJAPlayer4.ConfigIni.nPlayerCount = (int)GetObj現在値((int)EOrder2P.PlayerCount);
 						break;
 					case (int)EOrder2P.ScrollSpeed:
-						TJAPlayer3.ConfigIni.n譜面スクロール速度[nPlayer][nCurrentTarget] = (int)GetObj現在値((int)EOrder2P.ScrollSpeed);
+						TJAPlayer4.ConfigIni.n譜面スクロール速度[nPlayer][nCurrentTarget] = (int)GetObj現在値((int)EOrder2P.ScrollSpeed);
 						break;
 					case (int)EOrder2P.Random:
-						TJAPlayer3.ConfigIni.eRandom[nPlayer].Taiko = (Eランダムモード)GetIndex((int)EOrder2P.Random);
+						TJAPlayer4.ConfigIni.eRandom[nPlayer].Taiko = (Eランダムモード)GetIndex((int)EOrder2P.Random);
 						break;
 					case (int)EOrder2P.Stealth:
-						TJAPlayer3.ConfigIni.eSTEALTH[nPlayer] = (Eステルスモード)GetIndex((int)EOrder2P.Stealth);
+						TJAPlayer4.ConfigIni.eSTEALTH[nPlayer] = (Eステルスモード)GetIndex((int)EOrder2P.Stealth);
 						break;
 					case (int)EOrder2P.ShinuchiMode:
-						TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer] = !TJAPlayer3.ConfigIni.ShinuchiMode[nPlayer];
+						TJAPlayer4.ConfigIni.ShinuchiMode[nPlayer] = !TJAPlayer4.ConfigIni.ShinuchiMode[nPlayer];
 						break;
 					case (int)EOrder2P.More:
 						SetAutoParameters();            // 簡易CONFIGメニュー脱出に伴い、簡易CONFIG内のAUTOの設定をConfigIniクラスに反映する
@@ -249,7 +249,7 @@ namespace TJAPlayer3
 			if ( !base.b活性化してない )
 			{
 				//CDTXMania.tテクスチャの解放( ref this.txパネル本体 );
-				TJAPlayer3.tテクスチャの解放( ref this.tx文字列パネル );
+				TJAPlayer4.tテクスチャの解放( ref this.tx文字列パネル );
 				base.OnManagedリソースの解放();
 			}
 		}

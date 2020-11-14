@@ -8,9 +8,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using FDK;
-using TJAPlayer3;
+using TJAPlayer4;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	public class CScoreIni
 	{
@@ -1426,7 +1426,7 @@ namespace TJAPlayer3
 		}
 		internal static void t更新条件を取得する( out bool bDrumsを更新する, out bool bGuitarを更新する, out bool bBassを更新する )
 		{
-            bDrumsを更新する = !TJAPlayer3.ConfigIni.bAutoPlay[0];
+            bDrumsを更新する = !TJAPlayer4.ConfigIni.bAutoPlay[0];
 			bGuitarを更新する = false;
 			bBassを更新する =   false;
 		}

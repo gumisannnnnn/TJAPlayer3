@@ -8,7 +8,7 @@ using System.Diagnostics;
 using FDK;
 using FDK.ExtensionMethods;
 
-namespace TJAPlayer3
+namespace TJAPlayer4
 {
 	internal class CConfigIni : INotifyPropertyChanged
 	{
@@ -777,7 +777,7 @@ namespace TJAPlayer3
 		{
 			get
 			{
-				return ( !this.bConfigIniが存在している || !TJAPlayer3.VERSION.Equals( this.strDTXManiaのバージョン ) );
+				return ( !this.bConfigIniが存在している || !TJAPlayer4.VERSION.Equals( this.strDTXManiaのバージョン ) );
 			}
 		}
 		public bool bEnterがキー割り当てのどこにも使用されていない
@@ -1483,7 +1483,7 @@ namespace TJAPlayer3
 			#region [ Version ]
 			sw.WriteLine( "; リリースバージョン" );
 			sw.WriteLine( "; Release Version." );
-			sw.WriteLine( "Version={0}", TJAPlayer3.VERSION );
+			sw.WriteLine( "Version={0}", TJAPlayer4.VERSION );
 			sw.WriteLine();
 			#endregion
 			#region [ TJAPath ]
@@ -1496,12 +1496,12 @@ namespace TJAPlayer3
 			#endregion
 			#region [ スキン関連 ]
 			#region [ Skinパスの絶対パス→相対パス変換 ]
-			Uri uriRoot = new Uri( System.IO.Path.Combine( TJAPlayer3.strEXEのあるフォルダ, "System" + System.IO.Path.DirectorySeparatorChar ) );
+			Uri uriRoot = new Uri( System.IO.Path.Combine( TJAPlayer4.strEXEのあるフォルダ, "System" + System.IO.Path.DirectorySeparatorChar ) );
 			if ( strSystemSkinSubfolderFullName != null && strSystemSkinSubfolderFullName.Length == 0 )
 			{
 				// Config.iniが空の状態でDTXManiaをViewerとして起動_終了すると、strSystemSkinSubfolderFullName が空の状態でここに来る。
 				// → 初期値として Default/ を設定する。
-				strSystemSkinSubfolderFullName = System.IO.Path.Combine( TJAPlayer3.strEXEのあるフォルダ, "System" + System.IO.Path.DirectorySeparatorChar + "Default" + System.IO.Path.DirectorySeparatorChar );
+				strSystemSkinSubfolderFullName = System.IO.Path.Combine( TJAPlayer4.strEXEのあるフォルダ, "System" + System.IO.Path.DirectorySeparatorChar + "Default" + System.IO.Path.DirectorySeparatorChar );
 			}
 			Uri uriPath = new Uri( System.IO.Path.Combine( this.strSystemSkinSubfolderFullName, "." + System.IO.Path.DirectorySeparatorChar ) );
 			string relPath = uriRoot.MakeRelativeUri( uriPath ).ToString();				// 相対パスを取得
@@ -2153,7 +2153,7 @@ namespace TJAPlayer3
 												string absSkinPath = str4;
 												if ( !System.IO.Path.IsPathRooted( str4 ) )
 												{
-													absSkinPath = System.IO.Path.Combine( TJAPlayer3.strEXEのあるフォルダ, "System" );
+													absSkinPath = System.IO.Path.Combine( TJAPlayer4.strEXEのあるフォルダ, "System" );
 													absSkinPath = System.IO.Path.Combine( absSkinPath, str4 );
 													Uri u = new Uri( absSkinPath );
 													absSkinPath = u.AbsolutePath.ToString();	// str4内に相対パスがある場合に備える

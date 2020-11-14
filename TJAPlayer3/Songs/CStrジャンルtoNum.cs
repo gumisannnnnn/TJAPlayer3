@@ -1,4 +1,4 @@
-﻿namespace TJAPlayer3
+﻿namespace TJAPlayer4
 {
     internal static class CStrジャンルtoNum
     {

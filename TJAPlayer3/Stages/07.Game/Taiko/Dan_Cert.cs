@@ -101,6 +101,8 @@ namespace TJAPlayer4
 
         public void Update(bool Animetion = true)
         {
+            if (TJAPlayer4.stage選曲.n確定された曲の難易度[0] != (int)Difficulty.Dan)
+                return;
             #region [ 曲ごとの条件 ]
             for (int i = 0; i <= NowShowingNumber; i++)
             {
@@ -199,6 +201,8 @@ namespace TJAPlayer4
         }
         private void GaugeUpdate()
         {
+            if (TJAPlayer4.stage選曲.n確定された曲の難易度[0] != (int)Difficulty.Dan)
+                return;
             #region [ ゲージの条件 ]
             for (int n = 0; n < 3; n++)
             {

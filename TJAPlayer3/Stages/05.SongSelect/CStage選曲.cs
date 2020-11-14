@@ -990,7 +990,11 @@ namespace TJAPlayer4
 			this.r確定された曲 = this.act曲リスト.r現在選択中の曲;
 			this.r確定されたスコア = this.act曲リスト.r現在選択中のスコア;
 			for (int nPlayer = 0; nPlayer < TJAPlayer4.ConfigIni.nPlayerCount; nPlayer++)
+            {
 				this.n確定された曲の難易度[nPlayer] = this.act曲リスト.n現在選択中の曲の現在の難易度レベル[nPlayer];
+				if (this.n確定された曲の難易度[nPlayer] == (int)Difficulty.Dan)
+					TJAPlayer4.ConfigIni.nPlayerCount = 1;
+			}
             this.str確定された曲のジャンル = this.r確定された曲.strジャンル;
             if ( ( this.r確定された曲 != null ) && ( this.r確定されたスコア != null ) )
 			{
@@ -1005,7 +1009,11 @@ namespace TJAPlayer4
 			this.r確定された曲 = this.act曲リスト.r現在選択中の曲;
 			this.r確定されたスコア = this.act曲リスト.r現在選択中のスコア;
 			for (int nPlayer = 0; nPlayer < TJAPlayer4.ConfigIni.nPlayerCount; nPlayer++)
+            {
 				this.n確定された曲の難易度[nPlayer] = nCurrentLevel;
+				if (this.n確定された曲の難易度[nPlayer] == (int)Difficulty.Dan)
+					TJAPlayer4.ConfigIni.nPlayerCount = 1;
+			}
 			this.str確定された曲のジャンル = this.r確定された曲.strジャンル;
             if ( ( this.r確定された曲 != null ) && ( this.r確定されたスコア != null ) )
 			{

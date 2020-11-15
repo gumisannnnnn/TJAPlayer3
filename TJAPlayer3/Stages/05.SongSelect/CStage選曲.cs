@@ -1064,44 +1064,39 @@ namespace TJAPlayer4
 			}
 		}
 
-        private int nStrジャンルtoNum( string strジャンル )
-        {
-            int nGenre = 8;
-            switch( strジャンル )
-            {
-                case "アニメ":
-                    nGenre = 2;
-                    break;
-                case "J-POP":
-                    nGenre = 1;
-                    break;
-                case "ゲームミュージック":
-                    nGenre = 3;
-                    break;
-                case "ナムコオリジナル":
-                    nGenre = 4;
-                    break;
-                case "クラシック":
-                    nGenre = 5;
-                    break;
-                case "どうよう":
-                    nGenre = 7;
-                    break;
-                case "バラエティ":
-                    nGenre = 6;
-                    break;
-                case "ボーカロイド":
-                case "VOCALOID":
-                    nGenre = 8;
-                    break;
-                default:
-                    nGenre = 0;
-                    break;
-
-            }
-
-            return nGenre;
-        }
+		private int nStrジャンルtoNum(string strジャンル)
+		{
+			int nGenre = 8;
+			switch (strジャンル)
+			{
+				case "ポップス":
+					nGenre = 1;
+					break;
+				case "アニメ":
+					nGenre = 2;
+					break;
+				case "ゲームミュージック":
+					nGenre = 3;
+					break;
+				case "ナムコオリジナル":
+					nGenre = 4;
+					break;
+				case "クラシック":
+					nGenre = 5;
+					break;
+				case "キッズ":
+					nGenre = 6;
+					break;
+				case "ボーカロイド":
+				case "VOCALOID":
+					nGenre = 7;
+					break;
+				default:
+					nGenre = 0;
+					break;
+			}
+			return nGenre;
+		}
 		//-----------------
 		#endregion
 	}

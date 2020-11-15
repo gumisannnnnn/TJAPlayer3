@@ -1334,17 +1334,17 @@ namespace TJAPlayer4
                         {
                             var tx選択している曲のサブタイトル = ResolveTitleTexture(ttk選択している曲のサブタイトル);
                             int nサブタイY = (int)(TJAPlayer4.Skin.SongSelect_Overall_Y + 440 - (tx選択している曲のサブタイトル.sz画像サイズ.Height * tx選択している曲のサブタイトル.vc拡大縮小倍率.Y ));
-							tx選択している曲のサブタイトル.t2D描画( TJAPlayer4.app.Device, 707, nサブタイY );
+							tx選択している曲のサブタイトル.t2D拡大率考慮中央基準描画( TJAPlayer4.app.Device, 647, 355 );
                             if( this.ttk選択している曲の曲名 != null )
                             {
-						    	ResolveTitleTexture(this.ttk選択している曲の曲名).t2D描画( TJAPlayer4.app.Device, 750, TJAPlayer4.Skin.SongSelect_Overall_Y + 23);
+						    	ResolveTitleTexture(this.ttk選択している曲の曲名).t2D拡大率考慮中央基準描画( TJAPlayer4.app.Device, 647, 312);
                             }
                         }
                         else
                         {
                             if( this.ttk選択している曲の曲名 != null )
                             {
-	    						ResolveTitleTexture(this.ttk選択している曲の曲名).t2D描画( TJAPlayer4.app.Device, 750, TJAPlayer4.Skin.SongSelect_Overall_Y + 23);
+	    						ResolveTitleTexture(this.ttk選択している曲の曲名).t2D拡大率考慮中央基準描画( TJAPlayer4.app.Device, 647, 312);
                             }
                         }
 

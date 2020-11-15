@@ -189,7 +189,7 @@ namespace TJAPlayer4
 
                 #region[ バージョン表示 ]
                 //string strVersion = "KTT:J:A:I:2017072200";
-                string strCreator = "https://github.com/AioiLight/TJAPlayer4";
+                string strCreator = "https://github.com/gumisannnnnn/TJAPlayer4";
                 AssemblyName asmApp = Assembly.GetExecutingAssembly().GetName();
 #if DEBUG
                 TJAPlayer4.act文字コンソール.tPrint(4, 44, C文字コンソール.Eフォント種別.白, "DEBUG BUILD");
@@ -197,7 +197,7 @@ namespace TJAPlayer4
                 TJAPlayer4.act文字コンソール.tPrint(4, 4, C文字コンソール.Eフォント種別.白, asmApp.Name + " Ver." + TJAPlayer4.VERSION + " (" + strCreator + ")" );
                 TJAPlayer4.act文字コンソール.tPrint(4, 24, C文字コンソール.Eフォント種別.白, "Skin:" + TJAPlayer4.Skin.Skin_Name + " Ver." + TJAPlayer4.Skin.Skin_Version + " (" + TJAPlayer4.Skin.Skin_Creator + ")");
                 //CDTXMania.act文字コンソール.tPrint(4, 24, C文字コンソール.Eフォント種別.白, strSubTitle);
-                TJAPlayer4.act文字コンソール.tPrint(4, (720 - 24), C文字コンソール.Eフォント種別.白, "TJAPlayer4 forked TJAPlayer2 forPC(kairera0467)");
+                TJAPlayer4.act文字コンソール.tPrint(4, (720 - 24), C文字コンソール.Eフォント種別.白, "TJAPlayer4 forked TJAPlayer3(AioiLight)");
                 #endregion
 
                 

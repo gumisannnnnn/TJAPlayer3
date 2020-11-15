@@ -87,12 +87,12 @@ namespace TJAPlayer4
 				if( base.b初めての進行描画 )
 				{
 					this.list進行文字列.Add( "DTXManiaXG Ver.K powered by YAMAHA Silent Session Drums\n" );
-					this.list進行文字列.Add( "Product by.kairera0467\n" );
+					this.list進行文字列.Add( "Product by.AioiLight\n" );
 					this.list進行文字列.Add( "Release: " + TJAPlayer4.VERSION + " [" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "]" );
 
                     this.list進行文字列.Add("");
-                    this.list進行文字列.Add("TJAPlayer4 forked TJAPlayer2 forPC(kairera0467)");
-                    this.list進行文字列.Add("TJAPlayer4 edited by AioiLight(@aioilight)");
+                    this.list進行文字列.Add("TJAPlayer4 forked TJAPlayer3)");
+                    this.list進行文字列.Add("TJAPlayer4 edited by Gumi(@gumisannnnnn) & MochiDuKi(@MochiDuKi1111)");
                     this.list進行文字列.Add("");
 
                     es = new CEnumSongs();

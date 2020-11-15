@@ -1,5 +1,5 @@
-# TJAPlayer3
-DTXManiaをいじってtja再生プログラムにしちゃった[TJAPlayer3](https://github.com/AioiLight/TJAP3)をForkして本家風に改造したアレ。
+# TJAPlayer4
+DTXManiaをいじってtja再生プログラムにしちゃった[TJAPlayer3](https://github.com/AioiLight/TJAPlayer3)をForkして本家風に改造したアレ。
 
 この改造者[@gumisannnnnn](https://twitter.com/gumisannnnnn)はプログラミングが苦手で苦手で苦手過ぎるのでヤバくなると思います。(色々と)
 

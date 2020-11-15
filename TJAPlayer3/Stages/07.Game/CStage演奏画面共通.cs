@@ -1672,6 +1672,10 @@ namespace TJAPlayer4
 						{
 							this.actComboBalloon.Start(this.actCombo.n現在のコンボ数[nPlayer], nPlayer);
 						}
+						if (this.actCombo.n現在のコンボ数[nPlayer] == 50 && this.actCombo.n現在のコンボ数[nPlayer] > 0)
+						{
+							this.actComboBalloon.Start(this.actCombo.n現在のコンボ数[nPlayer], nPlayer);
+						}
 						this.actComboVoice.t再生(this.actCombo.n現在のコンボ数[nPlayer], nPlayer);
 
 						double dbUnit = (((60.0 / (TJAPlayer4.stage演奏ドラム画面.actPlayInfo.dbBPM))));

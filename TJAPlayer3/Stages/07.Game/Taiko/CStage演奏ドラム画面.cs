@@ -346,9 +346,9 @@ namespace TJAPlayer4
 					{
 						if (TJAPlayer4.ConfigIni.nPlayerCount == 2)
 						{
-							this.soundRed[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\dong" + nPlayer.ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
-							this.soundBlue[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\ka" + nPlayer.ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
-							this.soundAdlib[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\Adlib" + nPlayer.ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
+							this.soundRed[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\dong" + (nPlayer + 1).ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
+							this.soundBlue[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\ka" + (nPlayer + 1).ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
+							this.soundAdlib[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\Adlib" + (nPlayer + 1).ToString() + @"P" + @".ogg"), ESoundGroup.SoundEffect);
 						}
 						if (this.soundRed[nPlayer] == null)
 							this.soundRed[nPlayer] = TJAPlayer4.Sound管理.tサウンドを生成する(CSkin.Path(@"Sounds\Taiko\dong.ogg"), ESoundGroup.SoundEffect);

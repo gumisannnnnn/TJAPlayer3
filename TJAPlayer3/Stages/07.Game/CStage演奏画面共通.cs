@@ -1349,7 +1349,7 @@ namespace TJAPlayer4
 							{
 								if (TJAPlayer4.ConfigIni.bAuto先生の連打)
 								{
-									if (((CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer4.ConfigIni.n演奏速度) / 20.0)) * (((double)TJAPlayer4.ConfigIni.n演奏速度) / 20.0)) > (pChip.n発声時刻ms + (1000.0 / 15.0) * pChip.nRollCount))
+									if (((CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer4.ConfigIni.n演奏速度) / 20.0)) * (((double)TJAPlayer4.ConfigIni.n演奏速度) / 20.0)) > (pChip.n発声時刻ms + (1000.0 / 30.0) * pChip.nRollCount))
 									{
 										if (this.nHand[nPlayer] == 0)
 											this.nHand[nPlayer]++;

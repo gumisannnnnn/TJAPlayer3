@@ -349,7 +349,7 @@ namespace TJAPlayer4
 
             // 背景を描画する。
 
-            TJAPlayer4.Tx.DanC_Background?.t2D描画(TJAPlayer4.app.Device, 0, 360);
+            TJAPlayer4.Tx.DanC_Background?.t2D描画(TJAPlayer4.app.Device, 0, 0);
 
 
             // 残り音符数を描画する。

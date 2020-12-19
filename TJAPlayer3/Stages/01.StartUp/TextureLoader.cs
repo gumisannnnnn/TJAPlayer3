@@ -349,9 +349,10 @@ namespace TJAPlayer4
             Taiko_Score[0] = TxC(GAME + TAIKO + @"Score.png");
             Taiko_Score[1] = TxC(GAME + TAIKO + @"Score_1P.png");
             Taiko_Score[2] = TxC(GAME + TAIKO + @"Score_2P.png");
-            Taiko_Combo = new CTexture[2];
+            Taiko_Combo = new CTexture[3];
             Taiko_Combo[0] = TxC(GAME + TAIKO + @"Combo.png");
-            Taiko_Combo[1] = TxC(GAME + TAIKO + @"Combo_Big.png");
+            Taiko_Combo[1] = TxC(GAME + TAIKO + @"Combo_Middle.png");
+            Taiko_Combo[2] = TxC(GAME + TAIKO + @"Combo_Big.png");
             Taiko_Combo_Effect = TxC(GAME + TAIKO + @"Combo_Effect.png");
             Taiko_Combo_Text = TxC(GAME + TAIKO + @"Combo_Text.png");
             #endregion
@@ -708,6 +709,7 @@ namespace TJAPlayer4
             TJAPlayer4.tテクスチャの解放(ref Taiko_Score[2]);
             TJAPlayer4.tテクスチャの解放(ref Taiko_Combo[0]);
             TJAPlayer4.tテクスチャの解放(ref Taiko_Combo[1]);
+            TJAPlayer4.tテクスチャの解放(ref Taiko_Combo[2]);
             TJAPlayer4.tテクスチャの解放(ref Taiko_Combo_Effect);
             TJAPlayer4.tテクスチャの解放(ref Taiko_Combo_Text);
             #endregion
